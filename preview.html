@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="bn" data-lang="bn">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>প্রিভিউ — বন্ধু কুইজ</title>
+<meta name="theme-color" content="#f9488b" />
+<link rel="icon" href="images/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Baloo+2:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+:root{
+  --pink-50:#fff1f7;--pink-100:#ffd6e8;--pink-200:#ffb8d5;--pink-400:#ff5fa2;
+  --pink-500:#f9488b;--pink-600:#d92e6f;--pink-700:#a81550;
+  --purple-50:#f5f1ff;--purple-100:#ede9fe;--purple-200:#ddd4ff;
+  --purple-400:#a78bfa;--purple-500:#7c3aed;--purple-600:#6428d0;
+  --cream:#fff7f0;--blush:#fff0f5;
+  --ink-900:#2d1b3d;--ink-700:#5b4b6e;--ink-500:#8b7f9e;--ink-300:#c9c0d8;
+  --line:#efe7f5;--white:#ffffff;
+  --err-bg:#fff6f9;--err-line:#f5c2d1;--err-ink:#8a1538;
+  --ok-bg:#f2fdf7;--ok-line:#a0e2c2;--ok-ink:#0f6b47;
+  --warn-bg:#fffaf0;--warn-line:#f5d78e;--warn-ink:#7a5a00;
+  --info-bg:#eef7ff;--info-line:#cbe3f5;--info-ink:#0b4670;
+  --r-sm:10px;--r-md:16px;--r-lg:22px;--r-xl:32px;--r-pill:999px;
+  --sh-sm:0 2px 8px rgba(124,58,237,.06);
+  --sh-md:0 10px 30px rgba(124,58,237,.10);
+  --sh-lg:0 22px 60px rgba(124,58,237,.16);
+  --sh-brand:0 12px 28px rgba(249,72,139,.28);
+  --container:1120px;--header-h:72px;
+  --ease:cubic-bezier(.22,.61,.36,1);--dur:.24s;
+  --font-bn:'Hind Siliguri',system-ui,sans-serif;
+  --font-display:'Baloo 2','Hind Siliguri',system-ui,sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--font-bn);font-size:16.5px;line-height:1.65;color:var(--ink-900);background:var(--cream);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,svg{display:block;max-width:100%;height:auto}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:var(--pink-500);text-decoration:none}
+a:hover{text-decoration:underline}
+ul,ol{margin:0;padding:0;list-style:none}
+h1,h2,h3,h4{margin:0 0 .5em;line-height:1.25;font-weight:700;color:var(--ink-900)}
+p{margin:0 0 1em}
+:focus-visible{outline:3px solid var(--purple-400);outline-offset:2px;border-radius:6px}
+.container{width:100%;max-width:var(--container);margin-inline:auto;padding-inline:18px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip-link{position:absolute;left:-999px;top:8px;background:var(--pink-500);color:#fff;padding:10px 16px;border-radius:var(--r-pill);z-index:200}
+.skip-link:focus{left:12px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:var(--r-pill);background:var(--pink-500);color:#fff;font-weight:600;font-size:1rem;line-height:1.2;text-decoration:none;border:2px solid transparent;transition:transform var(--dur),box-shadow var(--dur);white-space:nowrap}
+.btn:hover{transform:translateY(-2px);text-decoration:none}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn--primary{background:linear-gradient(135deg,var(--pink-500),var(--purple-500));color:#fff;box-shadow:var(--sh-brand)}
+.btn--primary[data-state="published"]{background:linear-gradient(135deg,#10b981,#047857);box-shadow:0 8px 20px rgba(16,185,129,.25);cursor:default}
+.btn--primary[data-state="saving"]{background:linear-gradient(135deg,var(--purple-500),var(--purple-600));cursor:progress}
+.btn--primary[data-state="error"]{background:linear-gradient(135deg,#ef4444,#b91c1c)}
+.btn--ghost{background:var(--white);color:var(--pink-700);border-color:var(--pink-200);box-shadow:var(--sh-sm)}
+.btn--ghost:hover{background:var(--pink-50);border-color:var(--pink-400)}
+.btn--lg{padding:15px 28px;font-size:1.06rem}
+.btn--sm{padding:8px 14px;font-size:.86rem}
+.btn--block{width:100%}
+
+.input{width:100%;padding:10px 14px;border-radius:var(--r-pill);border:2px solid var(--line);background:var(--white);color:var(--ink-900);font-size:.94rem}
+.input:focus{outline:none;border-color:var(--purple-400);box-shadow:0 0 0 4px rgba(167,139,250,.15)}
+
+/* Header */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(255,247,240,.85);backdrop-filter:blur(14px);border-bottom:1px solid transparent}
+.site-header.is-scrolled{background:rgba(255,255,255,.95);border-bottom-color:var(--line);box-shadow:0 4px 20px rgba(124,58,237,.06)}
+.header__inner{min-height:var(--header-h);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.brand:hover{text-decoration:none}
+.brand__logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--pink-100),var(--purple-100));padding:5px}
+.brand__text{display:flex;flex-direction:column;line-height:1.15}
+.brand__name{font-family:var(--font-display);font-size:1.1rem;font-weight:700}
+.brand__tag{font-size:.72rem;color:var(--ink-500)}
+.lang-switch{display:inline-flex;padding:3px;background:var(--white);border:1px solid var(--line);border-radius:var(--r-pill)}
+.lang-switch__btn{padding:6px 14px;border-radius:var(--r-pill);font-size:.82rem;font-weight:600;color:var(--ink-500)}
+.lang-switch__btn.is-active{background:linear-gradient(135deg,var(--pink-500),var(--purple-500));color:#fff}
+
+/* Action bar */
+.pv-bar{position:sticky;top:var(--header-h);z-index:90;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);box-shadow:0 4px 12px rgba(124,58,237,.05)}
+.pv-bar[hidden]{display:none}
+.pv-bar__inner{display:flex;align-items:center;gap:12px;min-height:60px;padding-block:8px;flex-wrap:wrap}
+.pv-bar__nav,.pv-bar__controls{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pv-bar__nav{flex-shrink:0}
+.pv-bar__status{flex-shrink:0;margin-inline:auto 8px}
+.pv-toggle{display:inline-flex;padding:3px;background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-pill)}
+.pv-toggle__btn{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:var(--r-pill);font-size:.82rem;font-weight:600;color:var(--ink-500);transition:all var(--dur)}
+.pv-toggle__btn:hover{color:var(--ink-900)}
+.pv-toggle__btn[aria-pressed="true"]{background:linear-gradient(135deg,var(--pink-500),var(--purple-500));color:#fff}
+
+.pv-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:var(--r-pill);font-size:.78rem;font-weight:700;border:1.5px solid transparent}
+.pv-badge[data-state="draft"]{background:#fff4d6;border-color:#f5d78e;color:#8a6200}
+.pv-badge[data-state="published"]{background:#d9f5e7;border-color:#a0e2c2;color:#0f6b47}
+
+/* Main */
+.pv-main{max-width:1120px;margin:0 auto;padding:22px 18px 60px}
+.pv-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:80px 20px;text-align:center;color:var(--ink-700)}
+.pv-state--error{color:var(--err-ink)}
+.pv-state__emoji{font-size:2.4rem}
+.pv-state h2{font-family:var(--font-display);margin:0}
+.spinner{width:44px;height:44px;border-radius:50%;border:4px solid var(--pink-100);border-top-color:var(--pink-500);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.pv-content{display:grid;gap:18px}
+.pv-banner{display:flex;align-items:flex-start;gap:12px;padding:16px 18px;border-radius:var(--r-lg);background:var(--err-bg);border:1.5px solid var(--err-line);color:var(--err-ink);position:relative}
+.pv-banner[hidden]{display:none}
+.pv-banner__icon{font-size:1.3rem;line-height:1;flex-shrink:0}
+.pv-banner__body{flex:1;min-width:0}
+.pv-banner strong{display:block;font-size:1rem;margin-bottom:6px}
+.pv-banner__list{margin:0;padding-left:18px;font-size:.92rem;line-height:1.5;list-style:disc}
+.pv-banner__list li{margin-bottom:2px}
+.pv-banner__close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.6);color:inherit;flex-shrink:0}
+
+.pv-link{display:flex;gap:16px;padding:18px 22px;border-radius:var(--r-xl);background:linear-gradient(135deg,#e8faf1,#eaf6ff),var(--white);border:1.5px solid #a0e2c2;box-shadow:0 10px 26px rgba(16,185,129,.12)}
+.pv-link[hidden]{display:none}
+.pv-link__icon{font-size:2rem;line-height:1;flex-shrink:0}
+.pv-link__body{flex:1;min-width:0}
+.pv-link__title{display:block;font-family:var(--font-display);font-size:1.08rem;color:#0f6b47;margin-bottom:2px}
+.pv-link__sub{color:#17805a;font-size:.9rem;margin:0 0 12px}
+.pv-link__row{display:flex;gap:8px}
+.pv-link__input{flex:1;min-width:0;font-size:.88rem;background:var(--white);cursor:text}
+
+.pv-frame-wrap{display:grid;place-items:center}
+.pv-frame{width:100%;max-width:880px;position:relative;transition:max-width .35s var(--ease)}
+.pv-frame[data-device="mobile"]{max-width:400px;padding:12px;background:#1a1024;border-radius:44px;box-shadow:0 30px 60px rgba(45,27,61,.28),inset 0 0 0 2px #2d1b3d}
+.pv-frame[data-device="mobile"]::before{content:"";position:absolute;top:24px;left:50%;transform:translateX(-50%);width:96px;height:20px;border-radius:999px;background:#1a1024;z-index:3}
+.pv-frame__chrome{display:none}
+.pv-frame[data-device="desktop"] .pv-frame__chrome{display:flex;align-items:center;gap:6px;padding:10px 14px;background:linear-gradient(180deg,#f7f1fb,#efe6f6);border-radius:18px 18px 0 0;border:1px solid var(--line);border-bottom:0}
+.pv-frame__dot{width:10px;height:10px;border-radius:50%;background:#d4c8dd}
+.pv-frame__dot:nth-child(1){background:#ff8ca0}
+.pv-frame__dot:nth-child(2){background:#ffca7a}
+.pv-frame__dot:nth-child(3){background:#a2e0b6}
+.pv-frame__url{margin-left:12px;font-size:.78rem;color:var(--ink-500);font-family:var(--font-mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pv-canvas{background:radial-gradient(600px 300px at 15% 0%,var(--pink-50),transparent 60%),radial-gradient(500px 260px at 90% 100%,var(--purple-50),transparent 60%),var(--cream);padding:26px 24px 34px;border-radius:18px}
+.pv-frame[data-device="desktop"] .pv-canvas{border-radius:0 0 18px 18px;border:1px solid var(--line);border-top:0}
+.pv-frame[data-device="mobile"] .pv-canvas{border-radius:32px;padding:20px 16px 26px;height:min(720px,72vh);overflow-y:auto;scrollbar-width:thin}
+.pv-frame[data-device="mobile"] .pv-canvas::-webkit-scrollbar{width:6px}
+.pv-frame[data-device="mobile"] .pv-canvas::-webkit-scrollbar-thumb{background:rgba(124,58,237,.25);border-radius:3px}
+
+/* Quiz content */
+.pv-quiz{display:grid;gap:16px}
+.pv-quiz__cover{width:100%;max-width:220px;aspect-ratio:1/1;object-fit:cover;border-radius:20px;background:var(--pink-50);margin:0 auto 4px;box-shadow:0 12px 28px rgba(249,72,139,.18)}
+.pv-frame[data-device="mobile"] .pv-quiz__cover{max-width:160px}
+.pv-quiz__title{font-family:var(--font-display);font-size:clamp(1.4rem,5vw,2rem);line-height:1.25;margin:0;text-align:center;color:var(--ink-900)}
+.pv-frame[data-device="mobile"] .pv-quiz__title{font-size:1.4rem}
+.pv-quiz__creator{text-align:center;color:var(--pink-700);font-weight:600;font-size:.92rem;margin:-6px 0 0}
+.pv-quiz__desc{text-align:center;color:var(--ink-700);font-size:.95rem;margin:0;padding-inline:8px}
+.pv-ql{display:grid;gap:16px;margin-top:8px;list-style:none;padding:0}
+.pv-q{background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 18px 16px;box-shadow:var(--sh-sm)}
+.pv-frame[data-device="mobile"] .pv-q{padding:14px 14px 12px}
+.pv-q__head{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.pv-q__num{flex-shrink:0;width:28px;height:28px;display:grid;place-items:center;border-radius:9px;background:linear-gradient(135deg,var(--pink-500),var(--purple-500));color:#fff;font-family:var(--font-display);font-weight:700;font-size:.86rem}
+.pv-q__title{font-weight:700;font-size:1rem;color:var(--ink-900);line-height:1.4;flex:1;min-width:0}
+.pv-q__media{display:block;width:100%;max-width:140px;aspect-ratio:1/1;object-fit:contain;background:var(--pink-50);border-radius:14px;padding:8px;margin:0 0 12px}
+.pv-opts{display:grid;gap:8px;list-style:none;padding:0;margin:0}
+.pv-opt{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;border:1.5px solid var(--line);background:var(--white)}
+.pv-opt--correct{background:linear-gradient(135deg,#f2fdf7,#eafaf1);border-color:#a0e2c2;box-shadow:0 0 0 3px rgba(16,185,129,.08)}
+.pv-opt__media{width:40px;height:40px;border-radius:11px;object-fit:contain;background:var(--pink-50);padding:4px}
+.pv-opt__media--emoji{display:grid;place-items:center;font-size:1.15rem;background:var(--pink-50);padding:0}
+.pv-opt__text{font-size:.94rem;color:var(--ink-900);line-height:1.35;word-wrap:break-word}
+.pv-opt--correct .pv-opt__text{color:#0f6b47;font-weight:600}
+.pv-opt__check{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#10b981;color:#fff;font-size:.78rem;font-weight:700}
+.pv-q__explain{margin-top:12px;padding:10px 14px;border-radius:12px;background:var(--purple-50);border-left:3px solid var(--purple-400);font-size:.87rem;color:var(--ink-700);line-height:1.5}
+.pv-q__explain::before{content:"💡 ";margin-right:4px}
+.pv-empty{text-align:center;padding:40px 20px;color:var(--ink-500);font-size:.95rem}
+.pv-footnote{text-align:center;font-size:.82rem;color:var(--ink-500);margin:8px auto 0;max-width:620px}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--ink-900);color:#fff;padding:12px 20px;border-radius:var(--r-pill);font-size:.92rem;box-shadow:var(--sh-lg);opacity:0;transition:all var(--dur);z-index:700;max-width:90vw;text-align:center}
+.toast.is-show{opacity:1;transform:translate(-50%,0)}
+.toast[hidden]{display:none}
+
+.img-fallback{display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--pink-100),var(--purple-100));border-radius:inherit;font-size:1.4rem;line-height:1;user-select:none}
+
+/* Footer */
+.site-footer{margin-top:40px;padding:40px 0 20px;background:var(--white);border-top:1px solid var(--line);text-align:center;color:var(--ink-500);font-size:.88rem}
+.site-footer a{color:var(--ink-700)}
+.site-footer a:hover{color:var(--pink-700)}
+
+@media (max-width:900px){.hide-sm{display:none}}
+@media (max-width:640px){
+  .pv-main{padding:14px 12px 40px}
+  .pv-canvas{padding:18px 14px 26px}
+  .pv-link{flex-direction:column;padding:16px}
+  .pv-link__row{flex-direction:column}
+  .pv-link__row .btn{width:100%}
+  .pv-bar__inner{gap:6px}
+  .btn{padding:10px 16px;font-size:.9rem}
+  .pv-toggle__btn{padding:5px 9px;font-size:.76rem}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+
+<body>
+<a class="skip-link" href="#main">মূল অংশে যাও</a>
+
+<header class="site-header" id="siteHeader">
+  <div class="container header__inner">
+    <a class="brand" href="index.html">
+      <img class="brand__logo" id="brandLogo" src="images/logo.png" alt="" data-emoji="💞" />
+      <span class="brand__text">
+        <strong class="brand__name" id="brandName">বন্ধু কুইজ</strong>
+        <small class="brand__tag" id="brandTag">বন্ধুত্বের মজার পরীক্ষা</small>
+      </span>
+    </a>
+    <div class="lang-switch" role="group" aria-label="ভাষা">
+      <button type="button" class="lang-switch__btn" data-lang="bn">বাংলা</button>
+      <button type="button" class="lang-switch__btn" data-lang="en">English</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ Action bar ============ -->
+<div class="pv-bar" id="pvBar" hidden>
+  <div class="container pv-bar__inner">
+    <div class="pv-bar__nav">
+      <button type="button" class="btn btn--ghost btn--sm" id="backBtn"><span aria-hidden="true">←</span> <span id="pvBackLabel">পিছনে</span></button>
+      <button type="button" class="btn btn--ghost btn--sm" id="editBtn"><span aria-hidden="true">✏️</span> <span id="pvEditLabel">এডিট</span></button>
+    </div>
+    <div class="pv-bar__status">
+      <span class="pv-badge" id="statusBadge" data-state="draft">
+        <span aria-hidden="true">●</span>
+        <span id="statusLabel">—</span>
+      </span>
+    </div>
+    <div class="pv-bar__controls">
+      <div class="pv-toggle" id="deviceToggle" role="group">
+        <button type="button" class="pv-toggle__btn" data-device="mobile" aria-pressed="false"><span aria-hidden="true">📱</span> <span class="hide-sm" id="devMobileLabel">মোবাইল</span></button>
+        <button type="button" class="pv-toggle__btn" data-device="desktop" aria-pressed="false"><span aria-hidden="true">🖥️</span> <span class="hide-sm" id="devDesktopLabel">ডেস্কটপ</span></button>
+      </div>
+      <div class="pv-toggle" id="langToggle" role="group">
+        <button type="button" class="pv-toggle__btn" data-lang="bn" aria-pressed="false">বাং</button>
+        <button type="button" class="pv-toggle__btn" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <button type="button" class="btn btn--ghost btn--sm" id="copyBtn" disabled title="Copy link"><span aria-hidden="true">🔗</span> <span class="hide-sm" id="pvCopyLabel">কপি</span></button>
+      <button type="button" class="btn btn--ghost btn--sm" id="shareBtn" disabled title="Share"><span aria-hidden="true">📤</span> <span class="hide-sm" id="pvShareLabel">শেয়ার</span></button>
+      <button type="button" class="btn btn--primary btn--sm" id="publishBtn"><span aria-hidden="true">🚀</span> <span id="pvPublishLabel">প্রকাশ করো</span></button>
+    </div>
+  </div>
+</div>
+
+<main id="main" class="pv-main">
+
+  <div class="pv-state" id="stateLoading">
+    <div class="spinner" aria-hidden="true"></div>
+    <p id="stateLoadingText">লোড হচ্ছে…</p>
+  </div>
+
+  <div class="pv-state pv-state--error" id="stateError" hidden>
+    <span class="pv-state__emoji" aria-hidden="true">😕</span>
+    <h2 id="stateErrTitle">লোড করা যায়নি</h2>
+    <p id="stateErrMsg">—</p>
+    <a class="btn btn--primary" href="create.html" id="errHomeBtn">নতুন কুইজ বানাও</a>
+  </div>
+
+  <div class="pv-content" id="pvContent" hidden>
+
+    <div class="pv-banner" id="pvBanner" hidden>
+      <span class="pv-banner__icon" id="bannerIcon" aria-hidden="true">⚠️</span>
+      <div class="pv-banner__body">
+        <strong id="bannerTitle">—</strong>
+        <ul class="pv-banner__list" id="bannerList"></ul>
+      </div>
+      <button type="button" class="pv-banner__close" id="bannerClose" aria-label="Close">✕</button>
+    </div>
+
+    <div class="pv-link" id="pvLinkBanner" hidden>
+      <div class="pv-link__icon" aria-hidden="true">🎉</div>
+      <div class="pv-link__body">
+        <strong class="pv-link__title" id="pvLinkTitle">কুইজ প্রকাশিত হয়েছে!</strong>
+        <p class="pv-link__sub" id="pvLinkSub">নিচের লিংকটা কপি করে বন্ধুকে পাঠাও।</p>
+        <div class="pv-link__row">
+          <input type="text" class="input pv-link__input" id="shareUrlInput" readonly />
+          <button type="button" class="btn btn--primary btn--sm" id="copyInlineBtn" id="copyInlineLabel">কপি</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="pv-frame-wrap" aria-label="Quiz preview">
+      <div class="pv-frame" id="pvFrame" data-device="desktop">
+        <div class="pv-frame__chrome" aria-hidden="true">
+          <span class="pv-frame__dot"></span>
+          <span class="pv-frame__dot"></span>
+          <span class="pv-frame__dot"></span>
+          <span class="pv-frame__url" id="frameUrl">bondhu-quiz.app</span>
+        </div>
+        <div class="pv-canvas" id="pvCanvas" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <p class="pv-footnote" id="pvFootnote">ℹ️ এই প্রিভিউতে সঠিক উত্তরগুলো হাইলাইট করা আছে — বন্ধুরা এগুলো দেখতে পাবে না।</p>
+
+  </div>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p style="margin:0">© <span id="year">2025</span> <span id="footerBrand">বন্ধু কুইজ</span> · <a href="privacy.html">প্রাইভেসি</a> · <a href="terms.html">শর্তাবলি</a></p>
+  </div>
+</footer>
+
+<script type="module">
+import { db, doc, getDoc, updateDoc, serverTimestamp } from './firebase-config.js';
+import { loadSiteConfig, cfgText } from './site-config.js';
+
+/* =========================================================
+   Language
+   ========================================================= */
+const STORAGE_KEY = 'bq.lang';
+const SUPPORTED = ['bn','en'];
+function getLang(){
+  const s = localStorage.getItem(STORAGE_KEY);
+  return (s && SUPPORTED.includes(s)) ? s : 'bn';
+}
+function setLang(lang){
+  if (!SUPPORTED.includes(lang)) return;
+  localStorage.setItem(STORAGE_KEY, lang);
+  applyAll();
+  renderQuiz();
+  syncPublishUI();
+}
+
+/* =========================================================
+   Config
+   ========================================================= */
+let CFG = null;
+
+async function loadConfigAndApply(){
+  try { CFG = await loadSiteConfig(); } catch(e){ console.warn(e); }
+  applyAll();
+}
+
+function applyAll(){
+  const lang = getLang();
+  document.documentElement.setAttribute('lang', lang);
+
+  setText('brandName', cfgText(CFG, 'brand_name', lang) || 'বন্ধু কুইজ');
+  setText('brandTag', cfgText(CFG, 'brand_tag', lang) || 'বন্ধুত্বের মজার পরীক্ষা');
+  setText('footerBrand', cfgText(CFG, 'brand_name', lang) || 'বন্ধু কুইজ');
+  setImg('brandLogo', CFG?.logo_image);
+
+  document.querySelectorAll('.lang-switch__btn').forEach((b) => {
+    const on = b.dataset.lang === lang;
+    b.classList.toggle('is-active', on);
+    b.setAttribute('aria-pressed', String(on));
+  });
+
+  setText('stateLoadingText', lang === 'en' ? 'Loading…' : 'লোড হচ্ছে…');
+  setText('stateErrTitle', lang === 'en' ? 'Couldn’t load' : 'লোড করা যায়নি');
+  setText('errHomeBtn', lang === 'en' ? 'Create a new quiz' : 'নতুন কুইজ বানাও');
+  setText('pvBackLabel', lang === 'en' ? 'Back' : 'পিছনে');
+  setText('pvEditLabel', lang === 'en' ? 'Edit' : 'এডিট');
+  setText('devMobileLabel', lang === 'en' ? 'Mobile' : 'মোবাইল');
+  setText('devDesktopLabel', lang === 'en' ? 'Desktop' : 'ডেস্কটপ');
+  setText('pvCopyLabel', lang === 'en' ? 'Copy' : 'কপি');
+  setText('pvShareLabel', lang === 'en' ? 'Share' : 'শেয়ার');
+  setText('pvPublishLabel', lang === 'en' ? 'Publish Quiz' : 'প্রকাশ করো');
+  setText('pvLinkTitle', lang === 'en' ? 'Quiz published!' : 'কুইজ প্রকাশিত হয়েছে!');
+  setText('pvLinkSub', lang === 'en' ? 'Copy the link below and send it to a friend.' : 'নিচের লিংকটা কপি করে বন্ধুকে পাঠাও।');
+  setText('copyInlineBtn', lang === 'en' ? 'Copy' : 'কপি');
+  setText('pvFootnote', lang === 'en' ? 'ℹ️ Correct answers are highlighted in this preview — friends won’t see them.' : 'ℹ️ এই প্রিভিউতে সঠিক উত্তরগুলো হাইলাইট করা আছে — বন্ধুরা এগুলো দেখতে পাবে না।');
+
+  initImgFallbacks(document);
+}
+
+function setText(id, value){
+  const el = document.getElementById(id);
+  if (!el || value == null) return;
+  el.textContent = value;
+}
+function setImg(id, value){
+  const el = document.getElementById(id);
+  if (!el || !value) return;
+  el.src = value;
+}
+
+/* =========================================================
+   State
+   ========================================================= */
+const state = {
+  code: null,
+  quiz: null,
+  lang: 'bn',
+  device: 'desktop',
+  publishing: false,
+  published: false,
+  shareUrl: ''
+};
+
+/* =========================================================
+   Boot
+   ========================================================= */
+document.addEventListener('DOMContentLoaded', async () => {
+  initHeaderScroll();
+  initLangSwitch();
+  initFooterYear();
+  bindUI();
+
+  await loadConfigAndApply();
+
+  const params = new URLSearchParams(location.search);
+  const code = params.get('id') || params.get('quiz') || params.get('code');
+  state.code = code;
+
+  if (!code) return showErr(t('errNoId'));
+
+  try {
+    const snap = await getDoc(doc(db, 'quizzes', code));
+    if (!snap.exists()) return showErr(t('errNotFound'));
+    state.quiz = { id: snap.id, ...snap.data() };
+    state.published = state.quiz.published === true;
+    state.lang = state.quiz.language === 'en' ? 'en' : 'bn';
+    state.device = window.innerWidth < 720 ? 'mobile' : 'desktop';
+    state.shareUrl = state.published ? buildShareUrl(code) : '';
+
+    document.getElementById('stateLoading').hidden = true;
+    document.getElementById('pvBar').hidden = false;
+    document.getElementById('pvContent').hidden = false;
+    document.getElementById('frameUrl').textContent = stripProtocol(state.shareUrl || location.href);
+
+    applyDevice();
+    applyLang();
+    renderQuiz();
+    syncPublishUI();
+  } catch (err) {
+    console.error('[preview] load failed', err);
+    showErr(t('errLoadFailed'));
+  }
+});
+
+function t(key){
+  const lang = getLang();
+  const map = {
+    errNoId: { bn:'লিংকে কুইজ আইডি নেই।', en:'No quiz ID in the link.' },
+    errNotFound: { bn:'কুইজটা পাওয়া যায়নি।', en:'Quiz not found.' },
+    errLoadFailed: { bn:'লোড করা যায়নি। ইন্টারনেট চেক করে আবার চেষ্টা কর।', en:'Couldn’t load. Check your connection.' },
+    errValidation: { bn:'প্রকাশ করার আগে এই বিষয়গুলো ঠিক করো:', en:'Fix these before publishing:' },
+    errNoName: { bn:'ক্রিয়েটরের নাম নেই।', en:'Creator name is missing.' },
+    errNoQuestions: { bn:'অন্তত একটি প্রশ্ন যোগ করো।', en:'Add at least one question.' },
+    errQText: { bn:'প্রশ্নের টেক্সট নেই।', en:'Question text is missing.' },
+    errQOpts: { bn:'কমপক্ষে ২টি অপশন দরকার।', en:'At least 2 options are needed.' },
+    errQOptsEmpty: { bn:'কিছু অপশন ফাঁকা আছে।', en:'Some options are empty.' },
+    errQCorrect: { bn:'সঠিক উত্তর সিলেক্ট করা হয়নি।', en:'No correct answer selected.' },
+    errPublishFailed: { bn:'প্রকাশ করা যায়নি। আবার চেষ্টা কর।', en:'Couldn’t publish. Try again.' },
+    alreadyPublished: { bn:'এই কুইজ আগেই প্রকাশিত হয়েছে।', en:'This quiz is already published.' },
+    copied: { bn:'লিংক কপি হয়েছে!', en:'Link copied!' },
+    copyFailed: { bn:'কপি করা যায়নি।', en:'Couldn’t copy.' },
+    published: { bn:'✓ প্রকাশিত', en:'✓ Published' },
+    publishing: { bn:'প্রকাশ হচ্ছে…', en:'Publishing…' },
+    draft: { bn:'ড্রাফট', en:'Draft' }
+  };
+  return map[key]?.[lang] || map[key]?.bn || key;
+}
+
+function showErr(msg){
+  document.getElementById('stateLoading').hidden = true;
+  document.getElementById('stateError').hidden = false;
+  document.getElementById('stateErrMsg').textContent = msg;
+}
+
+/* =========================================================
+   UI binding
+   ========================================================= */
+function bindUI(){
+  const onScroll = () => document.getElementById('siteHeader').classList.toggle('is-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  document.querySelectorAll('.lang-switch__btn').forEach((btn) => {
+    btn.addEventListener('click', () => setLang(btn.dataset.lang));
+  });
+
+  document.getElementById('backBtn').addEventListener('click', () => {
+    if (history.length > 1) history.back();
+    else location.href = `questions.html?id=${encodeURIComponent(state.code)}`;
+  });
+  document.getElementById('editBtn').addEventListener('click', () => {
+    location.href = `questions.html?id=${encodeURIComponent(state.code)}`;
+  });
+
+  document.getElementById('deviceToggle').querySelectorAll('button[data-device]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.device = btn.dataset.device;
+      applyDevice();
+    });
+  });
+  document.getElementById('langToggle').querySelectorAll('button[data-lang]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.lang = btn.dataset.lang;
+      applyLang();
+      renderQuiz();
+    });
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', doCopy);
+  document.getElementById('copyInlineBtn').addEventListener('click', doCopy);
+  document.getElementById('shareBtn').addEventListener('click', doShare);
+  document.getElementById('publishBtn').addEventListener('click', doPublish);
+  document.getElementById('bannerClose').addEventListener('click', hideBanner);
+}
+
+function applyDevice(){
+  const frame = document.getElementById('pvFrame');
+  frame.dataset.device = state.device;
+  document.getElementById('deviceToggle').querySelectorAll('button[data-device]').forEach((btn) => {
+    btn.setAttribute('aria-pressed', String(btn.dataset.device === state.device));
+  });
+}
+function applyLang(){
+  document.getElementById('langToggle').querySelectorAll('button[data-lang]').forEach((btn) => {
+    btn.setAttribute('aria-pressed', String(btn.dataset.lang === state.lang));
+  });
+}
+
+/* =========================================================
+   Render quiz preview
+   ========================================================= */
+function renderQuiz(){
+  const q = state.quiz;
+  if (!q) return;
+  const lang = state.lang;
+  const title = q.title || defaultTitle(q.creatorName, lang);
+  const creatorLine = q.creatorName
+    ? (lang === 'en' ? `Quiz by ${q.creatorName}` : `${q.creatorName}-এর কুইজ`)
+    : '';
+  const questions = Array.isArray(q.questions) ? q.questions : [];
+
+  const coverHtml = q.coverImage
+    ? `<img class="pv-quiz__cover" src="${escapeAttr(q.coverImage)}" alt="" data-emoji="🎉" />`
+    : '';
+
+  const questionsHtml = questions.length
+    ? `<ol class="pv-ql">${questions.map((it, i) => renderQuestion(it, i, lang)).join('')}</ol>`
+    : `<p class="pv-empty">${lang === 'en' ? 'No questions yet.' : 'এখনো কোনো প্রশ্ন নেই।'}</p>`;
+
+  document.getElementById('pvCanvas').innerHTML = `
+    <article class="pv-quiz">
+      ${coverHtml}
+      <h1 class="pv-quiz__title">💖 ${escapeHtml(title)}</h1>
+      ${creatorLine ? `<p class="pv-quiz__creator">${escapeHtml(creatorLine)}</p>` : ''}
+      ${q.description ? `<p class="pv-quiz__desc">${escapeHtml(q.description)}</p>` : ''}
+      ${questionsHtml}
+    </article>
+  `;
+  initImgFallbacks(document.getElementById('pvCanvas'));
+}
+
+function renderQuestion(qs, i, lang){
+  const text = pick(qs.textBn, qs.textEn, lang) || '—';
+  const opts = Array.isArray(qs.options) ? qs.options : [];
+  const ci = Number.isInteger(qs.correctIndex) ? qs.correctIndex : -1;
+
+  const mediaHtml = qs.image
+    ? `<img class="pv-q__media" src="${escapeAttr(qs.image)}" alt="" data-emoji="${escapeAttr(qs.emoji || '❓')}" />`
+    : '';
+
+  const optsHtml = opts.map((o, oi) => renderOption(o, oi === ci, lang)).join('');
+  const explanation = pick(qs.explanationBn, qs.explanationEn, lang);
+
+  return `
+    <li class="pv-q">
+      <div class="pv-q__head">
+        <span class="pv-q__num">${i + 1}</span>
+        <div class="pv-q__title">${escapeHtml(text)}</div>
+      </div>
+      ${mediaHtml}
+      <ul class="pv-opts">${optsHtml}</ul>
+      ${explanation ? `<div class="pv-q__explain">${escapeHtml(explanation)}</div>` : ''}
+    </li>`;
+}
+
+function renderOption(o, isCorrect, lang){
+  const text = pick(o.textBn, o.textEn, lang) || '—';
+  let mediaHtml = '';
+  if (o.image) {
+    mediaHtml = `<img class="pv-opt__media" src="${escapeAttr(o.image)}" alt="" data-emoji="${escapeAttr(o.emoji || '·')}" />`;
+  } else if (o.emoji) {
+    mediaHtml = `<span class="pv-opt__media pv-opt__media--emoji" aria-hidden="true">${escapeHtml(o.emoji)}</span>`;
+  }
+  return `
+    <li class="pv-opt ${isCorrect ? 'pv-opt--correct' : ''}">
+      ${mediaHtml}
+      <span class="pv-opt__text">${escapeHtml(text)}</span>
+      ${isCorrect ? `<span class="pv-opt__check" aria-hidden="true">✓</span>` : ''}
+    </li>`;
+}
+
+/* =========================================================
+   Publish UI
+   ========================================================= */
+function syncPublishUI(){
+  const btn = document.getElementById('publishBtn');
+  const label = document.getElementById('pvPublishLabel');
+  const badge = document.getElementById('statusBadge');
+  const badgeLabel = document.getElementById('statusLabel');
+
+  if (state.published) {
+    badge.dataset.state = 'published';
+    badgeLabel.textContent = t('published');
+    btn.dataset.state = 'published';
+    btn.disabled = true;
+    btn.querySelector('span[aria-hidden]').textContent = '✓';
+    label.textContent = t('published');
+    document.getElementById('copyBtn').disabled = false;
+    document.getElementById('shareBtn').disabled = false;
+    document.getElementById('shareUrlInput').value = state.shareUrl;
+    document.getElementById('pvLinkBanner').hidden = false;
+  } else {
+    badge.dataset.state = 'draft';
+    badgeLabel.textContent = t('draft');
+    btn.dataset.state = '';
+    btn.disabled = state.publishing;
+    btn.querySelector('span[aria-hidden]').textContent = '🚀';
+    label.textContent = state.publishing ? t('publishing') : (getLang() === 'en' ? 'Publish Quiz' : 'প্রকাশ করো');
+    document.getElementById('copyBtn').disabled = !state.shareUrl;
+    document.getElementById('shareBtn').disabled = !state.shareUrl;
+    document.getElementById('pvLinkBanner').hidden = true;
+  }
+}
+
+/* =========================================================
+   Publish
+   ========================================================= */
+async function doPublish(){
+  if (state.publishing) return;
+  hideBanner();
+
+  if (state.published) {
+    document.getElementById('pvLinkBanner').hidden = false;
+    showToast(t('alreadyPublished'));
+    return;
+  }
+
+  const problems = validateForPublish();
+  if (problems.length) {
+    showBanner(t('errValidation'), problems);
+    return;
+  }
+
+  state.publishing = true;
+  syncPublishUI();
+
+  try {
+    await updateDoc(doc(db, 'quizzes', state.code), {
+      published: true,
+      updatedAt: serverTimestamp()
+    });
+
+    // Verify
+    const snap = await getDoc(doc(db, 'quizzes', state.code));
+    if (!snap.exists() || snap.data().published !== true) {
+      throw new Error('Firestore did not confirm publish');
+    }
+
+    state.quiz = { id: snap.id, ...snap.data() };
+    state.published = true;
+    state.shareUrl = buildShareUrl(state.code);
+    document.getElementById('frameUrl').textContent = stripProtocol(state.shareUrl);
+
+    state.publishing = false;
+    syncPublishUI();
+    showToast(getLang() === 'en' ? 'Quiz published!' : 'কুইজ প্রকাশিত হয়েছে!');
+  } catch (err) {
+    console.error('[preview] publish failed', err);
+    state.publishing = false;
+    document.getElementById('publishBtn').dataset.state = 'error';
+    showBanner(t('errPublishFailed'), [err.message || 'Unknown error']);
+    setTimeout(() => {
+      if (!state.published) {
+        document.getElementById('publishBtn').dataset.state = '';
+        syncPublishUI();
+      }
+    }, 1400);
+  }
+}
+
+function validateForPublish(){
+  const q = state.quiz || {};
+  const problems = [];
+
+  if (!q.creatorName || !String(q.creatorName).trim()) problems.push(t('errNoName'));
+  const questions = Array.isArray(q.questions) ? q.questions : [];
+  if (questions.length === 0) { problems.push(t('errNoQuestions')); return problems; }
+
+  questions.forEach((item, i) => {
+    const hasText = (item.textBn || '').trim() || (item.textEn || '').trim();
+    if (!hasText) { problems.push(`${i + 1}. ${t('errQText')}`); return; }
+    const opts = Array.isArray(item.options) ? item.options : [];
+    if (opts.length < 2) { problems.push(`${i + 1}. ${t('errQOpts')}`); return; }
+    const empty = opts.filter(o => !(o.textBn || '').trim() && !(o.textEn || '').trim()).length;
+    if (empty > 0) { problems.push(`${i + 1}. ${t('errQOptsEmpty')}`); return; }
+    const ci = item.correctIndex;
+    if (!Number.isInteger(ci) || ci < 0 || ci >= opts.length) problems.push(`${i + 1}. ${t('errQCorrect')}`);
+  });
+  return problems;
+}
+
+/* =========================================================
+   Banner
+   ========================================================= */
+function showBanner(title, items){
+  document.getElementById('bannerIcon').textContent = '⚠️';
+  document.getElementById('bannerTitle').textContent = title;
+  document.getElementById('bannerList').innerHTML = items.map(x => `<li>${escapeHtml(x)}</li>`).join('');
+  const b = document.getElementById('pvBanner');
+  b.hidden = false;
+  b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+function hideBanner(){
+  document.getElementById('pvBanner').hidden = true;
+  document.getElementById('bannerList').innerHTML = '';
+}
+
+/* =========================================================
+   Copy + share
+   ========================================================= */
+async function doCopy(){
+  if (!state.shareUrl) return;
+  const ok = await copyToClipboard(state.shareUrl);
+  showToast(ok ? t('copied') : t('copyFailed'));
+}
+
+async function doShare(){
+  if (!state.shareUrl) return;
+  const payload = {
+    title: state.quiz?.title || 'বন্ধু কুইজ',
+    text: state.quiz?.description || '',
+    url: state.shareUrl
+  };
+  if (typeof navigator.share === 'function') {
+    try { await navigator.share(payload); return; }
+    catch (err) { if (err && err.name === 'AbortError') return; }
+  }
+  const ok = await copyToClipboard(state.shareUrl);
+  showToast(ok ? t('copied') : t('copyFailed'));
+}
+
+async function copyToClipboard(text){
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {}
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch { return false; }
+}
+
+/* =========================================================
+   Helpers
+   ========================================================= */
+function buildShareUrl(code){
+  const base = `${location.origin}${location.pathname.replace(/[^/]*$/, '')}`;
+  return `${base}quiz.html?id=${encodeURIComponent(code)}`;
+}
+function stripProtocol(url){ return String(url || '').replace(/^https?:\/\//i, ''); }
+function defaultTitle(creator, lang){
+  const name = (creator || '').trim();
+  if (!name) return lang === 'en' ? 'How well do you know me?' : 'আমাকে কতটা চিনিস?';
+  if (lang === 'en') return `How well do you know ${name}?`;
+  return `${name}কে তুই কতটা চিনিস?`;
+}
+function pick(bn, en, lang){
+  if (lang === 'en') return (en || bn || '').trim();
+  return (bn || en || '').trim();
+}
+
+let toastTimer = null;
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.hidden = false;
+  requestAnimationFrame(() => el.classList.add('is-show'));
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    el.classList.remove('is-show');
+    setTimeout(() => { el.hidden = true; }, 260);
+  }, 2400);
+}
+
+function initHeaderScroll(){
+  const h = document.getElementById('siteHeader');
+  if (!h) return;
+  const fn = () => h.classList.toggle('is-scrolled', window.scrollY > 8);
+  fn();
+  window.addEventListener('scroll', fn, { passive: true });
+}
+function initLangSwitch(){
+  document.querySelectorAll('.lang-switch__btn').forEach(b => {
+    b.addEventListener('click', () => setLang(b.dataset.lang));
+  });
+}
+function initFooterYear(){
+  const el = document.getElementById('year');
+  if (el) el.textContent = new Date().getFullYear();
+}
+
+function attachImageFallback(img){
+  if (!img || img.dataset.fallbackBound === '1') return;
+  img.dataset.fallbackBound = '1';
+  const swap = () => {
+    const emoji = img.dataset.emoji || '🖼️';
+    const span = document.createElement('span');
+    span.className = 'img-fallback ' + (img.className || '');
+    span.setAttribute('role','img');
+    span.textContent = emoji;
+    if (img.width) span.style.width = img.width + 'px';
+    if (img.height) span.style.height = img.height + 'px';
+    span.style.width = span.style.width || '40px';
+    span.style.height = span.style.height || '40px';
+    img.replaceWith(span);
+  };
+  img.addEventListener('error', swap, { once: true });
+  if (img.complete && img.naturalWidth === 0) swap();
+}
+function initImgFallbacks(root){
+  root.querySelectorAll('img[data-emoji]').forEach(attachImageFallback);
+}
+
+function escapeHtml(s){
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function escapeAttr(s){ return escapeHtml(s); }
+</script>
+</body>
+</html>

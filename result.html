@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="bn" data-lang="bn">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>কুইজ খেলো — বন্ধু কুইজ</title>
+<meta name="theme-color" content="#f9488b" />
+<link rel="icon" href="images/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Baloo+2:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+:root{
+  --pink-50:#fff1f7;--pink-100:#ffd6e8;--pink-200:#ffb8d5;--pink-400:#ff5fa2;
+  --pink-500:#f9488b;--pink-600:#d92e6f;--pink-700:#a81550;
+  --purple-50:#f5f1ff;--purple-100:#ede9fe;--purple-200:#ddd4ff;
+  --purple-400:#a78bfa;--purple-500:#7c3aed;--purple-600:#6428d0;
+  --cream:#fff7f0;--blush:#fff0f5;
+  --ink-900:#2d1b3d;--ink-700:#5b4b6e;--ink-500:#8b7f9e;--ink-300:#c9c0d8;
+  --line:#efe7f5;--white:#ffffff;
+  --err-bg:#fff6f9;--err-line:#f5c2d1;--err-ink:#8a1538;
+  --ok-bg:#f2fdf7;--ok-line:#a0e2c2;--ok-ink:#0f6b47;
+  --warn-bg:#fffaf0;--warn-line:#f5d78e;--warn-ink:#7a5a00;
+  --r-sm:10px;--r-md:16px;--r-lg:22px;--r-xl:32px;--r-pill:999px;
+  --sh-sm:0 2px 8px rgba(124,58,237,.06);
+  --sh-md:0 10px 30px rgba(124,58,237,.10);
+  --sh-lg:0 22px 60px rgba(124,58,237,.16);
+  --sh-brand:0 12px 28px rgba(249,72,139,.28);
+  --container:720px;--header-h:72px;
+  --ease:cubic-bezier(.22,.61,.36,1);--dur:.24s;
+  --font-bn:'Hind Siliguri',system-ui,sans-serif;
+  --font-display:'Baloo 2','Hind Siliguri',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--font-bn);font-size:16.5px;line-height:1.65;color:var(--ink-900);
+  background:radial-gradient(900px 480px at 15% 0%,var(--pink-50),transparent 60%),
+             radial-gradient(800px 420px at 90% 100%,var(--purple-50),transparent 60%),
+             var(--cream);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+img,svg{display:block;max-width:100%;height:auto}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:var(--pink-500);text-decoration:none}
+a:hover{text-decoration:underline}
+ul,ol{margin:0;padding:0;list-style:none}
+h1,h2,h3,h4{margin:0 0 .5em;line-height:1.25;font-weight:700;color:var(--ink-900)}
+p{margin:0 0 1em}
+:focus-visible{outline:3px solid var(--purple-400);outline-offset:2px;border-radius:6px}
+.container{width:100%;max-width:var(--container);margin-inline:auto;padding-inline:18px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip-link{position:absolute;left:-999px;top:8px;background:var(--pink-500);color:#fff;padding:10px 16px;border-radius:var(--r-pill);z-index:200}
+.skip-link:focus{left:12px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:var(--r-pill);background:var(--pink-500);color:#fff;font-weight:600;font-size:1rem;line-height:1.2;text-decoration:none;border:2px solid transparent;transition:transform var(--dur),box-shadow var(--dur);white-space:nowrap}
+.btn:hover{transform:translateY(-2px);text-decoration:none}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn--primary{background:linear-gradient(135deg,var(--pink-500),var(--purple-500));color:#fff;box-shadow:var(--sh-brand)}
+.btn--ghost{background:var(--white);color:var(--pink-700);border-color:var(--pink-200);box-shadow:var(--sh-sm)}
+.btn--ghost:hover{background:var(--pink-50);border-color:var(--pink-400)}
+.btn--lg{padding:15px 28px;font-size:1.06rem}
+.btn--block{width:100%}
+
+.input{width:100%;padding:14px 18px;border-radius:var(--r-pill);border:2px solid var(--line);background:var(--white);color:var(--ink-900);font-size:1.05rem;transition:border-color var(--dur),box-shadow var(--dur)}
+.input:focus{outline:none;border-color:var(--purple-400);box-shadow:0 0 0 4px rgba(167,139,250,.18)}
+.input[aria-invalid="true"]{border-color:var(--err-line);background:#fffafc}
+
+/* Header */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(255,247,240,.85);backdrop-filter:blur(14px);border-bottom:1px solid transparent}
+.site-header.is-scrolled{background:rgba(255,255,255,.95);border-bottom-color:var(--line);box-shadow:0 4px 20px rgba(124,58,237,.06)}
+.header__inner{min-height:var(--header-h);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.brand:hover{text-decoration:none}
+.brand__logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--pink-100),var(--purple-100));padding:5px}
+.brand__text{display:flex;flex-direction:column;line-height:1.15}
+.brand__name{font-family:var(--font-display);font-size:1.1rem;font-weight:700}
+.brand__tag{font-size:.72rem;color:var(--ink-500)}
+.lang-switch{display:inline-flex;padding:3px;background:var(--white);border:1px solid var(--line);border-radius:var(--r-pill)}
+.lang-switch__btn{padding:6px 14px;border-radius:var(--r-pill);font-size:.82rem;font-weight:600;color:var(--ink-500)}
+.lang-switch__btn.is-active{background:linear-gradient(135deg,var(--pink-500),var(--purple-500));color:#fff}
+
+/* States */
+.play-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:80px 20px;text-align:center;color:var(--ink-700)}
+.play-state--error{color:var(--err-ink)}
+.play-state__emoji{font-size:2.6rem}
+.play-state h2{font-family:var(--font-display);margin:0}
+.play-state__actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+.spinner{width:46px;height:46px;border-radius:50%;border:4px solid var(--pink-100);border-top-color:var(--pink-500);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.play-main{max-width:var(--container);margin:0 auto;padding:22px 18px 60px}
+
+/* Intro */
+.intro{display:grid;place-items:center}
+.intro__card{width:100%;max-width:520px;background:var(--white);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh-md);padding:28px 24px 26px;text-align:center}
+.intro__cover{width:140px;height:140px;border-radius:50%;object-fit:cover;margin:0 auto 14px;background:var(--pink-50);padding:10px;box-shadow:0 12px 28px rgba(249,72,139,.18)}
+.intro__eyebrow{color:var(--pink-700);font-weight:700;font-size:.82rem;letter-spacing:.04em;text-transform:uppercase;margin:0 0 6px}
+.intro__title{font-family:var(--font-display);font-size:clamp(1.4rem,5vw,1.9rem);line-height:1.25;margin:0 0 8px;color:var(--ink-900);word-wrap:break-word}
+.intro__by{color:var(--pink-700);font-weight:600;font-size:.95rem;margin:0 0 4px}
+.intro__desc{color:var(--ink-700);font-size:.95rem;margin:4px 0 12px}
+.intro__meta{display:inline-flex;gap:8px;margin:6px 0 20px;flex-wrap:wrap;justify-content:center}
+.intro__meta-item{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--pink-50);border-radius:var(--r-pill);font-size:.85rem;color:var(--ink-700);font-weight:600}
+.intro__form{text-align:left;margin-top:6px}
+.intro__label{display:block;font-weight:600;font-size:.95rem;margin-bottom:6px}
+.intro__req{color:var(--pink-600)}
+.intro__hint{font-size:.82rem;color:var(--ink-500);margin:6px 2px 12px}
+.intro__error{color:var(--err-ink);font-size:.88rem;font-weight:600;margin:0 2px 10px;background:var(--err-bg);padding:8px 12px;border-radius:10px;border:1px solid var(--err-line)}
+.intro__error[hidden]{display:none}
+.intro__note{font-size:.8rem;color:var(--ink-500);margin:16px 0 0}
+
+/* Game */
+.game{display:grid;gap:20px}
+.game__head{display:flex;align-items:center;gap:14px}
+.game__progress{flex:1;min-width:0}
+.game__progress-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.game__progress-label{font-size:.82rem;color:var(--ink-500);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.game__progress-count{font-family:var(--font-display);color:var(--pink-700);font-size:1rem}
+.game__progress-count strong{font-size:1.15rem}
+.game__progress-track{height:8px;border-radius:999px;background:rgba(255,255,255,.85);border:1px solid var(--line);overflow:hidden}
+.game__progress-fill{display:block;height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg,var(--pink-500),var(--purple-500));transition:width .35s var(--ease)}
+.game__quit{flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--white);border:1px solid var(--line);color:var(--ink-700);font-size:1rem;box-shadow:var(--sh-sm)}
+.game__quit:hover{background:var(--pink-50);color:var(--pink-700)}
+
+.game__card{background:var(--white);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh-md);padding:24px 20px 22px}
+.q__media-wrap{display:flex;justify-content:center;margin-bottom:16px}
+.q__media{width:160px;height:160px;object-fit:contain;background:var(--pink-50);border-radius:22px;padding:14px}
+.q__text{font-family:var(--font-display);font-size:clamp(1.15rem,4.4vw,1.5rem);line-height:1.35;color:var(--ink-900);text-align:center;margin:0 0 20px;padding-inline:4px;word-wrap:break-word}
+
+.opts{display:grid;gap:12px}
+.opt{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--r-lg);border:2px solid var(--line);background:var(--white);cursor:pointer;text-align:left;font-family:inherit;font-size:1rem;color:var(--ink-900);min-height:68px;transition:all var(--dur);position:relative}
+.opt:hover{border-color:var(--pink-200);background:#fffafc;transform:translateY(-1px)}
+.opt.is-selected{border-color:var(--purple-500);background:linear-gradient(135deg,#fdf2ff,#f5f1ff);box-shadow:0 0 0 4px rgba(167,139,250,.18)}
+.opt__media{flex-shrink:0;width:52px;height:52px;border-radius:14px;object-fit:contain;background:var(--pink-50);padding:6px;display:grid;place-items:center;font-size:1.5rem}
+.opt__media--emoji{background:var(--pink-50)}
+.opt__text{flex:1;min-width:0;font-weight:600;font-size:1rem;line-height:1.35;word-wrap:break-word}
+.opt__check{flex-shrink:0;width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:var(--white);display:grid;place-items:center;color:transparent;font-weight:700;font-size:.85rem;transition:all var(--dur)}
+.opt.is-selected .opt__check{background:linear-gradient(135deg,var(--pink-500),var(--purple-500));border-color:var(--purple-500);color:#fff}
+
+.game__foot{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
+.game__foot .btn{width:100%}
+#prevBtn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* Save banner */
+.save-banner{display:flex;gap:12px;align-items:center;padding:14px 18px;border-radius:var(--r-lg);border:1.5px solid var(--line);background:var(--white);font-size:.92rem;margin-top:14px}
+.save-banner__icon{font-size:1.25rem;line-height:1}
+.save-banner__body{flex:1;min-width:0}
+.save-banner strong{display:block;color:var(--ink-900);font-size:.95rem;margin-bottom:2px}
+.save-banner span{color:var(--ink-700);font-size:.88rem}
+.save-banner[data-state="pending"]{border-color:#f5d78e;background:var(--warn-bg)}
+.save-banner[data-state="pending"] strong{color:var(--warn-ink)}
+.save-banner[data-state="fail"]{border-color:var(--err-line);background:var(--err-bg)}
+.save-banner[data-state="fail"] strong{color:var(--err-ink)}
+.save-banner__retry{margin-left:auto;flex-shrink:0}
+
+/* Modal */
+.modal{position:fixed;inset:0;z-index:600;display:grid;place-items:center;padding:16px}
+.modal[hidden]{display:none}
+.modal__backdrop{position:absolute;inset:0;background:rgba(45,27,61,.5);backdrop-filter:blur(4px);animation:fadeIn .18s var(--ease)}
+.modal__panel{position:relative;width:100%;max-width:440px;background:var(--white);border-radius:var(--r-xl);box-shadow:0 30px 70px rgba(45,27,61,.3);animation:modalIn .22s var(--ease);overflow:hidden}
+.modal__body{padding:22px 22px 6px}
+.modal__title{font-family:var(--font-display);font-size:1.15rem;margin:0 0 6px}
+.modal__text{color:var(--ink-700);font-size:.95rem;margin:0 0 6px}
+.modal__meta{font-size:.85rem;color:var(--pink-700);font-weight:600;background:var(--pink-50);padding:8px 12px;border-radius:10px;margin:10px 0 0}
+.modal__foot{display:flex;gap:10px;padding:16px 22px 20px;justify-content:flex-end}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes modalIn{from{transform:translateY(16px) scale(.98);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--ink-900);color:#fff;padding:12px 20px;border-radius:var(--r-pill);font-size:.92rem;box-shadow:var(--sh-lg);opacity:0;transition:all var(--dur);z-index:700;max-width:90vw;text-align:center}
+.toast.is-show{opacity:1;transform:translate(-50%,0)}
+.toast[hidden]{display:none}
+
+.img-fallback{display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--pink-100),var(--purple-100));border-radius:inherit;font-size:1.4rem;line-height:1;user-select:none}
+
+/* Footer */
+.site-footer{margin-top:40px;padding:40px 0 20px;background:var(--white);border-top:1px solid var(--line);text-align:center;color:var(--ink-500);font-size:.88rem}
+.site-footer a{color:var(--ink-700)}
+.site-footer a:hover{color:var(--pink-700)}
+
+@media (max-width:560px){
+  .play-main{padding:14px 12px 40px}
+  .intro__card{padding:22px 18px}
+  .intro__cover{width:110px;height:110px}
+  .game__card{padding:18px 14px 16px;border-radius:var(--r-lg)}
+  .q__media{width:130px;height:130px;border-radius:18px;padding:10px}
+  .opt{padding:12px;min-height:60px;gap:12px}
+  .opt__media{width:44px;height:44px;border-radius:12px}
+  .opt__text{font-size:.95rem}
+  .modal__foot{flex-direction:column-reverse}
+  .modal__foot .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+
+<body>
+<a class="skip-link" href="#main">মূল অংশে যাও</a>
+
+<header class="site-header" id="siteHeader">
+  <div class="container header__inner">
+    <a class="brand" href="index.html">
+      <img class="brand__logo" id="brandLogo" src="images/logo.png" alt="" data-emoji="💞" />
+      <span class="brand__text">
+        <strong class="brand__name" id="brandName">বন্ধু কুইজ</strong>
+        <small class="brand__tag" id="brandTag">বন্ধুত্বের মজার পরীক্ষা</small>
+      </span>
+    </a>
+    <div class="lang-switch" role="group" aria-label="ভাষা">
+      <button type="button" class="lang-switch__btn" data-lang="bn">বাংলা</button>
+      <button type="button" class="lang-switch__btn" data-lang="en">English</button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="play-main">
+
+  <!-- Loading -->
+  <div class="play-state" id="stateLoading">
+    <div class="spinner" aria-hidden="true"></div>
+    <p id="stateLoadingText">লোড হচ্ছে…</p>
+  </div>
+
+  <!-- Error -->
+  <div class="play-state play-state--error" id="stateError" hidden>
+    <span class="play-state__emoji" aria-hidden="true">😕</span>
+    <h2 id="stateErrTitle">কুইজ পাওয়া যায়নি</h2>
+    <p id="stateErrMsg">—</p>
+    <div class="play-state__actions">
+      <a class="btn btn--primary" href="index.html" id="errHomeBtn">হোমে ফিরে যাও</a>
+    </div>
+  </div>
+
+  <!-- Intro -->
+  <section class="intro" id="introScreen" hidden>
+    <div class="intro__card">
+      <img class="intro__cover" id="introCover" src="images/hero-friends.png" alt="" data-emoji="🎉" />
+      <p class="intro__eyebrow" id="introEyebrow">বন্ধুত্বের মজার পরীক্ষা</p>
+      <h1 class="intro__title" id="introTitle">—</h1>
+      <p class="intro__by" id="introBy">—</p>
+      <p class="intro__desc" id="introDesc" hidden></p>
+
+      <div class="intro__meta">
+        <span class="intro__meta-item">
+          <span aria-hidden="true">📝</span>
+          <span><strong id="introCount">0</strong> <span id="introQLabel">প্রশ্ন</span></span>
+        </span>
+        <span class="intro__meta-item">
+          <span aria-hidden="true">⏱️</span>
+          <span id="introTimeLabel">~২ মিনিট</span>
+        </span>
+      </div>
+
+      <form class="intro__form" id="introForm" novalidate>
+        <label class="intro__label" for="playerName">
+          <span id="introNickLabel">তোমার ডাকনাম</span>
+          <span class="intro__req" aria-hidden="true">*</span>
+        </label>
+        <input id="playerName" type="text" class="input" maxlength="30" autocomplete="nickname" placeholder="যেমন: রাহুল" />
+        <p class="intro__hint" id="introNickHint">এই নামটাই স্কোরবোর্ডে দেখাবে — লগইন লাগবে না।</p>
+        <p class="intro__error" id="introErr" hidden></p>
+
+        <button type="submit" class="btn btn--primary btn--block btn--lg" id="startBtn">
+          <span aria-hidden="true">▶</span>
+          <span id="introStartLabel">খেলা শুরু করো</span>
+        </button>
+      </form>
+
+      <p class="intro__note" id="introNote">ℹ️ স্কোর তোমার ব্রাউজারে হিসাব হয় — এটা মজার কুইজ, পরীক্ষা না।</p>
+    </div>
+  </section>
+
+  <!-- Game -->
+  <section class="game" id="gameScreen" hidden>
+    <header class="game__head">
+      <div class="game__progress">
+        <div class="game__progress-row">
+          <span class="game__progress-label" id="gameProgLabel">অগ্রগতি</span>
+          <span class="game__progress-count"><strong id="qNum">1</strong><span aria-hidden="true"> / </span><span id="qTotal">0</span></span>
+        </div>
+        <div class="game__progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
+          <span class="game__progress-fill" id="progressFill"></span>
+        </div>
+      </div>
+      <button type="button" class="game__quit" id="quitBtn" aria-label="Exit quiz">✕</button>
+    </header>
+
+    <div class="game__card">
+      <div class="q__media-wrap" id="qMediaWrap">
+        <img class="q__media" id="qMedia" src="images/default-question.png" alt="" data-emoji="❓" />
+      </div>
+      <h2 class="q__text" id="qText">—</h2>
+      <ul class="opts" id="optsList" role="radiogroup"></ul>
+    </div>
+
+    <footer class="game__foot">
+      <button type="button" class="btn btn--ghost btn--lg" id="prevBtn">
+        <span aria-hidden="true">←</span> <span id="prevLabel">পিছনে</span>
+      </button>
+      <button type="button" class="btn btn--primary btn--lg" id="nextBtn">
+        <span id="nextLabel">পরবর্তী</span> <span aria-hidden="true">→</span>
+      </button>
+    </footer>
+
+    <div class="save-banner" id="saveBanner" data-state="pending" hidden>
+      <span class="save-banner__icon" id="saveIcon" aria-hidden="true">⏳</span>
+      <div class="save-banner__body">
+        <strong id="saveTitle">—</strong>
+        <span id="saveText">—</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Confirm submit -->
+<div class="modal" id="confirmModal" hidden aria-hidden="true">
+  <div class="modal__backdrop" data-confirm-close></div>
+  <div class="modal__panel" role="dialog" aria-modal="true">
+    <div class="modal__body">
+      <h3 class="modal__title" id="cfTitle">জমা দেবে?</h3>
+      <p class="modal__text" id="cfText">জমা দিলে আর উত্তর বদলাতে পারবে না।</p>
+      <p class="modal__meta" id="cfMeta">—</p>
+    </div>
+    <div class="modal__foot">
+      <button type="button" class="btn btn--ghost" data-confirm-close id="cfCancel">আরেকবার দেখি</button>
+      <button type="button" class="btn btn--primary" id="cfOk">জমা দাও</button>
+    </div>
+  </div>
+</div>
+
+<!-- Quit confirm -->
+<div class="modal" id="quitModal" hidden aria-hidden="true">
+  <div class="modal__backdrop" data-quit-close></div>
+  <div class="modal__panel" role="dialog" aria-modal="true">
+    <div class="modal__body">
+      <h3 class="modal__title" id="qtTitle">খেলা ছেড়ে দেবে?</h3>
+      <p class="modal__text" id="qtText">তোমার অগ্রগতি সেভ হবে না।</p>
+    </div>
+    <div class="modal__foot">
+      <button type="button" class="btn btn--ghost" data-quit-close id="qtCancel">খেলব</button>
+      <button type="button" class="btn btn--primary" id="qtOk">ছেড়ে দাও</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p style="margin:0">© <span id="year">2025</span> <span id="footerBrand">বন্ধু কুইজ</span> · <a href="privacy.html">প্রাইভেসি</a> · <a href="terms.html">শর্তাবলি</a></p>
+  </div>
+</footer>
+
+<script type="module">
+import {
+  db, doc, getDoc, collection, addDoc, serverTimestamp
+} from './firebase-config.js';
+import { loadSiteConfig, cfgText } from './site-config.js';
+
+/* =========================================================
+   Language
+   ========================================================= */
+const STORAGE_KEY = 'bq.lang';
+const SUPPORTED = ['bn','en'];
+function getLang(){
+  const s = localStorage.getItem(STORAGE_KEY);
+  return (s && SUPPORTED.includes(s)) ? s : 'bn';
+}
+function setLang(lang){
+  if (!SUPPORTED.includes(lang)) return;
+  localStorage.setItem(STORAGE_KEY, lang);
+  applyAll();
+  if (state.quiz) {
+    renderIntro();
+    if (state.inGame) renderQuestion();
+    if (state.saveStatus) renderSaveBanner();
+  }
+}
+
+/* =========================================================
+   Config
+   ========================================================= */
+let CFG = null;
+async function loadConfigAndApply(){
+  try { CFG = await loadSiteConfig(); } catch(e){ console.warn(e); }
+  applyAll();
+}
+function applyAll(){
+  const lang = getLang();
+  document.documentElement.setAttribute('lang', lang);
+
+  setText('brandName', cfgText(CFG, 'brand_name', lang) || 'বন্ধু কুইজ');
+  setText('brandTag', cfgText(CFG, 'brand_tag', lang) || 'বন্ধুত্বের মজার পরীক্ষা');
+  setText('footerBrand', cfgText(CFG, 'brand_name', lang) || 'বন্ধু কুইজ');
+  setImg('brandLogo', CFG?.logo_image);
+
+  document.querySelectorAll('.lang-switch__btn').forEach((b) => {
+    const on = b.dataset.lang === lang;
+    b.classList.toggle('is-active', on);
+    b.setAttribute('aria-pressed', String(on));
+  });
+
+  setText('stateLoadingText', lang === 'en' ? 'Loading quiz…' : 'কুইজ লোড হচ্ছে…');
+  setText('stateErrTitle', lang === 'en' ? 'Quiz not found' : 'কুইজ পাওয়া যায়নি');
+  setText('errHomeBtn', lang === 'en' ? 'Back to home' : 'হোমে ফিরে যাও');
+  setText('introQLabel', lang === 'en' ? 'questions' : 'প্রশ্ন');
+  setText('introTimeLabel', lang === 'en' ? '~2 minutes' : '~২ মিনিট');
+  setText('introNickLabel', lang === 'en' ? 'Your nickname' : 'তোমার ডাকনাম');
+  setText('introNickHint', lang === 'en' ? 'This is how you’ll show up on the scoreboard — no login needed.' : 'এই নামটাই স্কোরবোর্ডে দেখাবে — লগইন লাগবে না।');
+  setText('introStartLabel', lang === 'en' ? 'Start playing' : 'খেলা শুরু করো');
+  setText('introNote', lang === 'en' ? 'ℹ️ Scoring happens in your browser — this is for fun, not an exam.' : 'ℹ️ স্কোর তোমার ব্রাউজারে হিসাব হয় — এটা মজার কুইজ, পরীক্ষা না।');
+  setText('gameProgLabel', lang === 'en' ? 'Progress' : 'অগ্রগতি');
+  setText('prevLabel', lang === 'en' ? 'Back' : 'পিছনে');
+  setText('cfTitle', lang === 'en' ? 'Submit?' : 'জমা দেবে?');
+  setText('cfText', lang === 'en' ? 'You won’t be able to change your answers after this.' : 'জমা দিলে আর উত্তর বদলাতে পারবে না।');
+  setText('cfCancel', lang === 'en' ? 'Review again' : 'আরেকবার দেখি');
+  setText('cfOk', lang === 'en' ? 'Submit' : 'জমা দাও');
+  setText('qtTitle', lang === 'en' ? 'Leave the quiz?' : 'খেলা ছেড়ে দেবে?');
+  setText('qtText', lang === 'en' ? 'Your progress won’t be saved.' : 'তোমার অগ্রগতি সেভ হবে না।');
+  setText('qtCancel', lang === 'en' ? 'Keep playing' : 'খেলব');
+  setText('qtOk', lang === 'en' ? 'Leave' : 'ছেড়ে দাও');
+
+  initImgFallbacks(document);
+}
+function setText(id, value){
+  const el = document.getElementById(id);
+  if (!el || value == null) return;
+  el.textContent = value;
+}
+function setImg(id, value){
+  const el = document.getElementById(id);
+  if (!el || !value) return;
+  el.src = value;
+}
+
+/* =========================================================
+   State
+   ========================================================= */
+const state = {
+  code: null,
+  quiz: null,
+  playerName: '',
+  answers: [],
+  currentIndex: 0,
+  inGame: false,
+  submitted: false,
+  score: 0,
+  saving: false,
+  saveStatus: null, // 'pending' | 'ok' | 'fail'
+  subId: null
+};
+
+/* =========================================================
+   Boot
+   ========================================================= */
+document.addEventListener('DOMContentLoaded', async () => {
+  initHeaderScroll();
+  initLangSwitch();
+  initFooterYear();
+  bindUI();
+
+  await loadConfigAndApply();
+
+  const params = new URLSearchParams(location.search);
+  const code = params.get('id') || params.get('quiz') || params.get('code');
+  state.code = code;
+
+  if (!code) return showErr(t('errNoId'));
+
+  try {
+    const snap = await getDoc(doc(db, 'quizzes', code));
+    if (!snap.exists()) return showErr(t('errNotFound'));
+    const quiz = { id: snap.id, ...snap.data() };
+    if (quiz.published !== true) return showErr(t('errUnpublished'));
+    if (quiz.closed === true) return showErr(t('errClosed'));
+    const questions = Array.isArray(quiz.questions) ? quiz.questions : [];
+    if (questions.length === 0) return showErr(t('errNotFound'));
+
+    state.quiz = quiz;
+    state.answers = new Array(questions.length).fill(null);
+    state.currentIndex = 0;
+
+    // Follow quiz language if 'mixed' or invalid → use site language
+    if (quiz.language === 'bn' || quiz.language === 'en') {
+      // Adopt quiz language as display language (but user can still switch)
+      if (getLang() !== quiz.language) {
+        localStorage.setItem(STORAGE_KEY, quiz.language);
+      }
+    }
+    applyAll();
+
+    document.getElementById('stateLoading').hidden = true;
+    renderIntro();
+    document.getElementById('introScreen').hidden = false;
+  } catch (err) {
+    console.error('[quiz] load failed', err);
+    showErr(t('errLoadFailed'));
+  }
+});
+
+function t(key){
+  const lang = getLang();
+  const map = {
+    errNoId: { bn:'লিংকে কুইজ আইডি নেই।', en:'No quiz ID in the link.' },
+    errNotFound: { bn:'এই কুইজটা আর নেই বা লিংকটা ভুল।', en:'Quiz not found or the link is wrong.' },
+    errUnpublished: { bn:'এই কুইজটা এখনো প্রকাশিত হয়নি।', en:'This quiz hasn’t been published yet.' },
+    errClosed: { bn:'এই কুইজটা এখন বন্ধ।', en:'This quiz is closed.' },
+    errLoadFailed: { bn:'লোড করা যায়নি। ইন্টারনেট চেক করে আবার চেষ্টা কর।', en:'Couldn’t load. Check your connection.' },
+    needName: { bn:'খেলতে হলে নিজের একটা ডাকনাম দাও।', en:'Enter a nickname to play.' },
+    nameShort: { bn:'ডাকনামটা অন্তত ২ অক্ষরের হতে হবে।', en:'Nickname must be at least 2 characters.' },
+    needAnswer: { bn:'আগে একটা উত্তর বেছে নে।', en:'Pick an answer first.' },
+    saveErr: { bn:'স্কোর সেভ করা যায়নি', en:'Couldn’t save score' },
+    saveErrText: { bn:'ইন্টারনেট চেক করে আবার চেষ্টা কর।', en:'Check your connection and try again.' },
+    savePending: { bn:'স্কোর সেভ হচ্ছে…', en:'Saving your score…' },
+    savePendingText: { bn:'এক মুহূর্ত অপেক্ষা কর।', en:'Just a moment.' },
+    retry: { bn:'আবার চেষ্টা কর', en:'Try again' },
+    confirmMeta: { bn:'{a}টি উত্তর দিয়েছ — বাকি {l}টি।', en:'{a} answered — {l} left.' },
+    confirmMetaAll: { bn:'সব {n}টি প্রশ্নের উত্তর দিয়েছ।', en:'You answered all {n} questions.' },
+    next: { bn:'পরবর্তী', en:'Next' },
+    finish: { bn:'শেষ করো', en:'Finish' }
+  };
+  const dict = map[key] || {};
+  return dict[lang] || dict.bn || key;
+}
+
+function showErr(msg){
+  document.getElementById('stateLoading').hidden = true;
+  document.getElementById('stateError').hidden = false;
+  document.getElementById('stateErrMsg').textContent = msg;
+}
+
+/* =========================================================
+   UI binding
+   ========================================================= */
+function bindUI(){
+  const onScroll = () => document.getElementById('siteHeader').classList.toggle('is-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  document.querySelectorAll('.lang-switch__btn').forEach((btn) => {
+    btn.addEventListener('click', () => setLang(btn.dataset.lang));
+  });
+
+  document.getElementById('introForm').addEventListener('submit', onStart);
+  document.getElementById('prevBtn').addEventListener('click', goPrev);
+  document.getElementById('nextBtn').addEventListener('click', goNext);
+  document.getElementById('quitBtn').addEventListener('click', openQuit);
+
+  document.getElementById('optsList').addEventListener('click', (e) => {
+    const btn = e.target.closest('.opt');
+    if (!btn) return;
+    selectOption(Number(btn.dataset.optIdx));
+  });
+
+  document.querySelectorAll('[data-confirm-close]').forEach(el => el.addEventListener('click', closeConfirm));
+  document.getElementById('cfOk').addEventListener('click', onConfirmSubmit);
+
+  document.querySelectorAll('[data-quit-close]').forEach(el => el.addEventListener('click', closeQuit));
+  document.getElementById('qtOk').addEventListener('click', () => { closeQuit(); location.href = 'index.html'; });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (!document.getElementById('confirmModal').hidden) closeConfirm();
+    else if (!document.getElementById('quitModal').hidden) closeQuit();
+  });
+}
+
+/* =========================================================
+   Intro
+   ========================================================= */
+function renderIntro(){
+  const q = state.quiz;
+  if (!q) return;
+  const lang = getLang();
+
+  document.getElementById('introCover').src = q.coverImage || 'images/hero-friends.png';
+  document.getElementById('introTitle').textContent = `💖 ${q.title || defaultTitle(q.creatorName, lang)}`;
+  document.getElementById('introBy').textContent = q.creatorName
+    ? (lang === 'en' ? `Quiz by ${q.creatorName}` : `${q.creatorName}-এর কুইজ`)
+    : '';
+
+  const descEl = document.getElementById('introDesc');
+  if (q.description) { descEl.textContent = q.description; descEl.hidden = false; }
+  else descEl.hidden = true;
+
+  document.getElementById('introCount').textContent = state.quiz.questions.length;
+  document.getElementById('introEyebrow').textContent = cfgText(CFG, 'quiz_intro_eyebrow', lang) || (lang === 'en' ? 'A fun friendship test' : 'বন্ধুত্বের মজার পরীক্ষা');
+
+  initImgFallbacks(document.getElementById('introScreen'));
+}
+
+function onStart(e){
+  e.preventDefault();
+  const lang = getLang();
+  const err = document.getElementById('introErr');
+  err.hidden = true;
+
+  const name = document.getElementById('playerName').value.trim();
+  if (!name) {
+    err.textContent = t('needName');
+    err.hidden = false;
+    document.getElementById('playerName').focus();
+    return;
+  }
+  if (name.length < 2) {
+    err.textContent = t('nameShort');
+    err.hidden = false;
+    document.getElementById('playerName').focus();
+    return;
+  }
+
+  state.playerName = name.slice(0, 30);
+  state.currentIndex = 0;
+  state.inGame = true;
+
+  document.getElementById('introScreen').hidden = true;
+  document.getElementById('gameScreen').hidden = false;
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* =========================================================
+   Question rendering
+   ========================================================= */
+function renderQuestion(){
+  const i = state.currentIndex;
+  const total = state.quiz.questions.length;
+  const q = state.quiz.questions[i];
+  const lang = getLang();
+
+  document.getElementById('qNum').textContent = i + 1;
+  document.getElementById('qTotal').textContent = total;
+
+  const pct = ((i + 1) / total) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressBar').setAttribute('aria-valuenow', String(Math.round(pct)));
+
+  // Media
+  const mediaWrap = document.getElementById('qMediaWrap');
+  const media = document.getElementById('qMedia');
+  if (q.image) {
+    mediaWrap.innerHTML = `<img class="q__media" id="qMedia" src="${escapeAttr(q.image)}" alt="" data-emoji="${escapeAttr(q.emoji || '❓')}" />`;
+    mediaWrap.hidden = false;
+    initImgFallbacks(mediaWrap);
+  } else if (q.emoji) {
+    mediaWrap.innerHTML = `<span class="q__media" role="img" aria-hidden="true" style="display:grid;place-items:center;font-size:4rem">${escapeHtml(q.emoji)}</span>`;
+    mediaWrap.hidden = false;
+  } else {
+    mediaWrap.hidden = true;
+  }
+
+  // Question text
+  document.getElementById('qText').textContent = pick(q.textBn, q.textEn, lang) || '—';
+
+  // Options
+  const selected = state.answers[i];
+  const optsList = document.getElementById('optsList');
+  optsList.innerHTML = (q.options || []).map((o, oi) => renderOpt(o, oi, selected === oi, lang)).join('');
+  initImgFallbacks(optsList);
+
+  // Navigation
+  document.getElementById('prevBtn').disabled = i === 0;
+  const isLast = i === total - 1;
+  document.getElementById('nextLabel').textContent = isLast ? t('finish') : t('next');
+}
+
+function renderOpt(o, oi, isSelected, lang){
+  const text = pick(o.textBn, o.textEn, lang) || '—';
+  let mediaHtml = '';
+  if (o.image) {
+    mediaHtml = `<img class="opt__media" src="${escapeAttr(o.image)}" alt="" data-emoji="${escapeAttr(o.emoji || '·')}" />`;
+  } else if (o.emoji) {
+    mediaHtml = `<span class="opt__media opt__media--emoji" aria-hidden="true">${escapeHtml(o.emoji)}</span>`;
+  } else {
+    mediaHtml = `<span class="opt__media" aria-hidden="true"></span>`;
+  }
+  return `
+    <li>
+      <button type="button" class="opt ${isSelected ? 'is-selected' : ''}" data-opt-idx="${oi}" role="radio" aria-checked="${isSelected}">
+        ${mediaHtml}
+        <span class="opt__text">${escapeHtml(text)}</span>
+        <span class="opt__check" aria-hidden="true">✓</span>
+      </button>
+    </li>`;
+}
+
+function selectOption(idx){
+  if (state.submitted) return;
+  state.answers[state.currentIndex] = idx;
+  document.querySelectorAll('.opt').forEach((btn) => {
+    const on = Number(btn.dataset.optIdx) === idx;
+    btn.classList.toggle('is-selected', on);
+    btn.setAttribute('aria-checked', String(on));
+  });
+}
+
+function goPrev(){
+  if (state.currentIndex <= 0) return;
+  state.currentIndex -= 1;
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goNext(){
+  if (state.answers[state.currentIndex] == null) { showToast(t('needAnswer')); return; }
+  const isLast = state.currentIndex === state.quiz.questions.length - 1;
+  if (isLast) { openConfirm(); return; }
+  state.currentIndex += 1;
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* =========================================================
+   Confirm submit
+   ========================================================= */
+function openConfirm(){
+  if (state.submitted) return;
+  const total = state.quiz.questions.length;
+  const answered = state.answers.filter(a => a != null).length;
+  const left = total - answered;
+  const meta = document.getElementById('cfMeta');
+  if (left > 0) meta.textContent = t('confirmMeta').replace('{a}', answered).replace('{l}', left);
+  else meta.textContent = t('confirmMetaAll').replace('{n}', total);
+  document.getElementById('confirmModal').hidden = false;
+  document.getElementById('confirmModal').setAttribute('aria-hidden','false');
+  document.body.style.overflow = 'hidden';
+}
+function closeConfirm(){
+  document.getElementById('confirmModal').hidden = true;
+  document.getElementById('confirmModal').setAttribute('aria-hidden','true');
+  document.body.style.overflow = '';
+}
+
+function openQuit(){
+  document.getElementById('quitModal').hidden = false;
+  document.getElementById('quitModal').setAttribute('aria-hidden','false');
+  document.body.style.overflow = 'hidden';
+}
+function closeQuit(){
+  document.getElementById('quitModal').hidden = true;
+  document.getElementById('quitModal').setAttribute('aria-hidden','true');
+  document.body.style.overflow = '';
+}
+
+/* =========================================================
+   Submit + save
+   ========================================================= */
+async function onConfirmSubmit(){
+  if (state.submitted) return;
+  state.submitted = true;
+  closeConfirm();
+
+  // Compute score
+  state.score = computeScore();
+
+  // Show save banner, disable game UI
+  document.getElementById('prevBtn').disabled = true;
+  document.getElementById('nextBtn').disabled = true;
+  document.getElementById('quitBtn').disabled = true;
+
+  state.saveStatus = 'pending';
+  renderSaveBanner();
+  await attemptSave();
+}
+
+function computeScore(){
+  let correct = 0;
+  state.quiz.questions.forEach((q, i) => {
+    const chosen = state.answers[i];
+    const ci = Number.isInteger(q.correctIndex) ? q.correctIndex : -1;
+    if (chosen != null && chosen === ci) correct += 1;
+  });
+  return correct;
+}
+
+async function attemptSave(){
+  state.saving = true;
+  state.saveStatus = 'pending';
+  renderSaveBanner();
+
+  try {
+    const answersForSave = state.quiz.questions.map((q, i) => ({
+      qid: q.id || '',
+      chosen: Number.isInteger(state.answers[i]) ? state.answers[i] : -1
+    }));
+
+    const ref = collection(db, 'quizzes', state.code, 'scores');
+    const docRef = await addDoc(ref, {
+      playerName: state.playerName,
+      score: state.score,
+      total: state.quiz.questions.length,
+      answers: answersForSave,
+      playedAt: serverTimestamp()
+    });
+
+    state.subId = docRef.id;
+    state.saveStatus = 'ok';
+    state.saving = false;
+    renderSaveBanner();
+
+    // Redirect to result.html only after Firestore confirms
+    const url = `result.html?quiz=${encodeURIComponent(state.code)}&sub=${encodeURIComponent(docRef.id)}`;
+    setTimeout(() => { window.location.href = url; }, 600);
+  } catch (err) {
+    console.error('[quiz] save failed', err);
+    state.saveStatus = 'fail';
+    state.saving = false;
+    renderSaveBanner();
+  }
+}
+
+function renderSaveBanner(){
+  const banner = document.getElementById('saveBanner');
+  const icon = document.getElementById('saveIcon');
+  const title = document.getElementById('saveTitle');
+  const text = document.getElementById('saveText');
+
+  // Remove old retry button
+  const old = banner.querySelector('.save-banner__retry');
+  if (old) old.remove();
+
+  if (state.saveStatus === 'pending') {
+    banner.hidden = false;
+    banner.dataset.state = 'pending';
+    icon.textContent = '⏳';
+    title.textContent = t('savePending');
+    text.textContent = t('savePendingText');
+  } else if (state.saveStatus === 'ok') {
+    banner.hidden = false;
+    banner.dataset.state = 'ok';
+    icon.textContent = '✅';
+    title.textContent = getLang() === 'en' ? 'Score saved ✓' : 'স্কোর সেভ হয়েছে ✓';
+    text.textContent = getLang() === 'en' ? 'Taking you to the result…' : 'ফলাফল দেখাচ্ছি…';
+  } else if (state.saveStatus === 'fail') {
+    banner.hidden = false;
+    banner.dataset.state = 'fail';
+    icon.textContent = '⚠️';
+    title.textContent = t('saveErr');
+    text.textContent = t('saveErrText');
+    const retry = document.createElement('button');
+    retry.type = 'button';
+    retry.className = 'btn btn--ghost btn--sm save-banner__retry';
+    retry.textContent = t('retry');
+    retry.addEventListener('click', async () => {
+      retry.disabled = true;
+      await attemptSave();
+    });
+    banner.appendChild(retry);
+  }
+}
+
+/* =========================================================
+   Helpers
+   ========================================================= */
+function defaultTitle(creator, lang){
+  const name = (creator || '').trim();
+  if (!name) return lang === 'en' ? 'How well do you know me?' : 'আমাকে কতটা চিনিস?';
+  if (lang === 'en') return `How well do you know ${name}?`;
+  return `${name}কে তুই কতটা চিনিস?`;
+}
+function pick(bn, en, lang){
+  if (lang === 'en') return (en || bn || '').trim();
+  return (bn || en || '').trim();
+}
+
+let toastTimer = null;
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.hidden = false;
+  requestAnimationFrame(() => el.classList.add('is-show'));
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    el.classList.remove('is-show');
+    setTimeout(() => { el.hidden = true; }, 260);
+  }, 2200);
+}
+
+function initHeaderScroll(){
+  const h = document.getElementById('siteHeader');
+  if (!h) return;
+  const fn = () => h.classList.toggle('is-scrolled', window.scrollY > 8);
+  fn();
+  window.addEventListener('scroll', fn, { passive: true });
+}
+function initLangSwitch(){
+  document.querySelectorAll('.lang-switch__btn').forEach(b => {
+    b.addEventListener('click', () => setLang(b.dataset.lang));
+  });
+}
+function initFooterYear(){
+  const el = document.getElementById('year');
+  if (el) el.textContent = new Date().getFullYear();
+}
+
+function attachImageFallback(img){
+  if (!img || img.dataset.fallbackBound === '1') return;
+  img.dataset.fallbackBound = '1';
+  const swap = () => {
+    const emoji = img.dataset.emoji || '🖼️';
+    const span = document.createElement('span');
+    span.className = 'img-fallback ' + (img.className || '');
+    span.setAttribute('role','img');
+    span.textContent = emoji;
+    if (img.width) span.style.width = img.width + 'px';
+    if (img.height) span.style.height = img.height + 'px';
+    span.style.width = span.style.width || '52px';
+    span.style.height = span.style.height || '52px';
+    img.replaceWith(span);
+  };
+  img.addEventListener('error', swap, { once: true });
+  if (img.complete && img.naturalWidth === 0) swap();
+}
+function initImgFallbacks(root){
+  root.querySelectorAll('img[data-emoji]').forEach(attachImageFallback);
+}
+
+function escapeHtml(s){
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function escapeAttr(s){ return escapeHtml(s); }
+</script>
+</body>
+</html>

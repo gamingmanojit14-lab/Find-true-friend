@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="bn" data-lang="bn">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>নিজের কুইজ বানাও — বন্ধু কুইজ</title>
+<meta name="description" content="মাত্র কয়েক মিনিটে নিজের সম্পর্কে কুইজ বানাও।" />
+<meta name="theme-color" content="#f9488b" />
+<link rel="icon" href="images/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Baloo+2:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+:root{
+  --pink-50:#fff1f7;--pink-100:#ffd6e8;--pink-200:#ffb8d5;--pink-400:#ff5fa2;
+  --pink-500:#f9488b;--pink-600:#d92e6f;--pink-700:#a81550;
+  --purple-50:#f5f1ff;--purple-100:#ede9fe;--purple-200:#ddd4ff;
+  --purple-400:#a78bfa;--purple-500:#7c3aed;--purple-600:#6428d0;
+  --cream:#fff7f0;--blush:#fff0f5;
+  --ink-900:#2d1b3d;--ink-700:#5b4b6e;--ink-500:#8b7f9e;--ink-300:#c9c0d8;
+  --line:#efe7f5;--white:#ffffff;
+  --err-bg:#fff6f9;--err-line:#f5c2d1;--err-ink:#8a1538;
+  --ok-bg:#f2fdf7;--ok-line:#a0e2c2;--ok-ink:#0f6b47;
+  --warn-bg:#fffaf0;--warn-line:#f5d78e;--warn-ink:#7a5a00;
+  --r-sm:10px;--r-md:16px;--r-lg:22px;--r-xl:32px;--r-pill:999px;
+  --sh-sm:0 2px 8px rgba(124,58,237,.06);
+  --sh-md:0 10px 30px rgba(124,58,237,.10);
+  --sh-lg:0 22px 60px rgba(124,58,237,.16);
+  --sh-brand:0 12px 28px rgba(249,72,139,.28);
+  --container:1120px;--header-h:72px;
+  --ease:cubic-bezier(.22,.61,.36,1);--dur:.25s;
+  --font-bn:'Hind Siliguri',system-ui,sans-serif;
+  --font-display:'Baloo 2','Hind Siliguri',system-ui,sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--font-bn);font-size:16.5px;line-height:1.65;color:var(--ink-900);background:var(--cream);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,svg{display:block;max-width:100%;height:auto}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:var(--pink-500);text-decoration:none}
+a:hover{text-decoration:underline}
+ul,ol{margin:0;padding:0;list-style:none}
+h1,h2,h3,h4{margin:0 0 .5em;line-height:1.25;font-weight:700;color:var(--ink-900)}
+p{margin:0 0 1em}
+:focus-visible{outline:3px solid var(--purple-400);outline-offset:2px;border-radius:6px}
+.container{width:100%;max-width:var(--container);margin-inline:auto;padding-inline:18px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip-link{position:absolute;left:-999px;top:8px;background:var(--pink-500);color:#fff;padding:10px 16px;border-radius:var(--r-pill);z-index:200}
+.skip-link:focus{left:12px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:var(--r-pill);background:var(--pink-500);color:#fff;font-weight:600;font-size:1rem;line-height:1.2;text-decoration:none;border:2px solid transparent;transition:transform var(--dur) var(--ease),box-shadow var(--dur) var(--ease);white-space:nowrap}
+.btn:hover{transform:translateY(-2px);text-decoration:none}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn--primary{background:linear-gradient(135deg,var(--pink-500),var(--purple-500));color:#fff;box-shadow:var(--sh-brand)}
+.btn--ghost{background:var(--white);color:var(--pink-700);border-color:var(--pink-200);box-shadow:var(--sh-sm)}
+.btn--ghost:hover{background:var(--pink-50);border-color:var(--pink-400)}
+.btn--lg{padding:15px 28px;font-size:1.06rem}
+.btn--sm{padding:9px 16px;font-size:.9rem}
+.btn--block{width:100%}
+
+.input{width:100%;padding:13px 18px;border-radius:var(--r-pill);border:2px solid var(--line);background:var(--white);color:var(--ink-900);font-size:1rem;transition:border-color var(--dur),box-shadow var(--dur)}
+.input::placeholder{color:var(--ink-300)}
+.input:focus{outline:none;border-color:var(--purple-400);box-shadow:0 0 0 4px rgba(167,139,250,.18)}
+.input--area{resize:vertical;min-height:80px;border-radius:var(--r-md);padding:12px 16px;font-family:inherit;line-height:1.55}
+.input[aria-invalid="true"]{border-color:var(--err-line);background:#fffafc}
+
+.field{display:block;margin-bottom:18px}
+.field__label{display:flex;align-items:baseline;gap:6px;font-weight:600;font-size:.96rem;color:var(--ink-900);margin-bottom:8px}
+.field__req{color:var(--pink-600);font-weight:700}
+.field__opt{color:var(--ink-500);font-weight:400;font-size:.84rem}
+.field__hint{margin:6px 2px 0;font-size:.84rem;color:var(--ink-500)}
+.field__error{margin:8px 2px 0;font-size:.87rem;color:var(--err-ink);font-weight:600;background:var(--err-bg);padding:8px 12px;border-radius:10px;border:1px solid var(--err-line)}
+.field__error[hidden]{display:none}
+
+/* Header */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(255,247,240,.82);backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:all var(--dur)}
+.site-header.is-scrolled{background:rgba(255,255,255,.92);border-bottom-color:var(--line);box-shadow:0 4px 20px rgba(124,58,237,.06)}
+.header__inner{min-height:var(--header-h);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;flex-shrink:0}
+.brand:hover{text-decoration:none}
+.brand__logo{width:44px;height:44px;border-radius:14px;object-fit:cover;background:linear-gradient(135deg,var(--pink-100),var(--purple-100));padding:6px}
+.brand__text{display:flex;flex-direction:column;line-height:1.15}
+.brand__name{font-family:var(--font-display);font-size:1.18rem;font-weight:700;color:var(--ink-900)}
+.brand__tag{font-size:.74rem;color:var(--ink-500)}
+.site-nav{display:flex;align-items:center;gap:22px}
+.site-nav__list{display:flex;align-items:center;gap:4px}
+.site-nav__link{display:inline-block;padding:9px 14px;border-radius:var(--r-pill);color:var(--ink-700);font-weight:500;font-size:.95rem;text-decoration:none}
+.site-nav__link:hover{background:var(--pink-50);color:var(--pink-700);text-decoration:none}
+.site-nav__link.is-active{background:var(--pink-100);color:var(--pink-700);font-weight:600}
+.lang-switch{display:inline-flex;padding:3px;background:var(--white);border:1px solid var(--line);border-radius:var(--r-pill)}
+.lang-switch__btn{padding:6px 14px;border-radius:var(--r-pill);font-size:.82rem;font-weight:600;color:var(--ink-500)}
+.lang-switch__btn.is-active{background:linear-gradient(135deg,var(--pink-500),var(--purple-500));color:#fff}
+.nav-toggle{display:none;width:44px;height:44px;border-radius:12px;background:var(--white);border:1px solid var(--line);flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:0}
+.nav-toggle__bar{display:block;width:20px;height:2.5px;border-radius:2px;background:var(--ink-700);transition:all var(--dur)}
+.nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+@media (max-width:900px){
+  .nav-toggle{display:flex}
+  .site-nav{position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:12px;padding:18px;background:rgba(255,255,255,.98);border-bottom:1px solid var(--line);box-shadow:0 18px 40px rgba(124,58,237,.10);transform:translateY(-12px);opacity:0;visibility:hidden;transition:all var(--dur)}
+  .site-nav.is-open{transform:translateY(0);opacity:1;visibility:visible}
+  .site-nav__list{flex-direction:column;align-items:stretch;gap:4px}
+  .site-nav__link{padding:13px 16px;font-size:1rem;border-radius:var(--r-md)}
+  .lang-switch{align-self:flex-start}
+}
+
+/* Footer */
+.site-footer{margin-top:40px;padding:56px 0 22px;background:radial-gradient(800px 300px at 20% 0%,var(--pink-50),transparent 60%),radial-gradient(800px 300px at 80% 100%,var(--purple-50),transparent 60%),var(--white);border-top:1px solid var(--line)}
+.footer__inner{display:grid;grid-template-columns:1.3fr 1fr;gap:32px;align-items:start}
+.footer__logo{width:40px;height:40px;border-radius:12px;background:var(--pink-50);padding:6px;margin-bottom:10px}
+.footer__name{font-family:var(--font-display);font-size:1.15rem;display:block;margin-bottom:4px}
+.footer__tagline{color:var(--ink-700);font-size:.95rem;margin:0}
+.footer__nav ul{display:grid;grid-template-columns:repeat(2,minmax(120px,1fr));gap:8px 24px}
+.footer__nav a{color:var(--ink-700);font-size:.95rem;padding:6px 0;display:inline-block}
+.footer__nav a:hover{color:var(--pink-700)}
+.footer__bottom{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;color:var(--ink-500);font-size:.88rem}
+.footer__bottom p{margin:0}
+@media (max-width:720px){.footer__inner{grid-template-columns:1fr}.footer__bottom{justify-content:center;text-align:center}}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--ink-900);color:#fff;padding:12px 20px;border-radius:var(--r-pill);font-size:.92rem;box-shadow:var(--sh-lg);opacity:0;transition:all var(--dur);z-index:300;max-width:90vw;text-align:center}
+.toast.is-show{opacity:1;transform:translate(-50%,0)}
+.toast[hidden]{display:none}
+
+.img-fallback{display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--pink-100),var(--purple-100));border-radius:inherit;font-size:1.5rem;line-height:1;user-select:none}
+
+/* ============ Create page ============ */
+.create-hero{padding:40px 0 26px;background:radial-gradient(900px 340px at 15% 0%,var(--pink-50),transparent 60%),radial-gradient(700px 300px at 90% 100%,var(--purple-50),transparent 60%),var(--cream)}
+.create-hero__inner{text-align:center}
+.create-hero__badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:var(--r-pill);background:var(--white);border:1px solid var(--pink-100);color:var(--pink-700);font-size:.82rem;font-weight:600;margin-bottom:14px;box-shadow:var(--sh-sm)}
+.create-hero__title{font-family:var(--font-display);font-size:clamp(1.8rem,5.5vw,2.8rem);background:linear-gradient(120deg,var(--pink-600),var(--purple-500) 70%);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:10px}
+.create-hero__sub{max-width:620px;margin:0 auto;color:var(--ink-700);font-size:1rem}
+
+.create-form{max-width:780px;margin:0 auto;padding:24px 18px 80px;display:grid;gap:22px}
+.form-card{background:var(--white);border:1px solid var(--line);border-radius:var(--r-xl);padding:24px 22px 26px;box-shadow:var(--sh-sm)}
+.form-card__head{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.form-card__step{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;font-family:var(--font-display);font-weight:700;font-size:1rem;color:#fff;background:linear-gradient(135deg,var(--pink-500),var(--purple-500));box-shadow:0 6px 14px rgba(249,72,139,.25);flex-shrink:0}
+.form-card__title{font-family:var(--font-display);font-size:1.22rem;margin:0}
+.form-card__sub{color:var(--ink-700);font-size:.95rem;margin:8px 2px 18px}
+
+.field--fieldset{border:0;padding:0;margin:0 0 18px}
+
+/* Chip radio */
+.chip-radio{display:flex;flex-wrap:wrap;gap:10px}
+.chip-radio__item{position:relative;display:inline-flex}
+.chip-radio__item input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2}
+.chip-radio__item > span{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:var(--r-pill);border:2px solid var(--line);background:var(--white);color:var(--ink-700);font-weight:600;font-size:.93rem;transition:all var(--dur)}
+.chip-radio__item input:checked + span{border-color:var(--purple-400);background:linear-gradient(135deg,var(--pink-500),var(--purple-500));color:#fff;box-shadow:0 8px 18px rgba(249,72,139,.22)}
+.chip-radio__item input:focus-visible + span{outline:3px solid var(--purple-400);outline-offset:2px}
+.chip-radio__icon{font-size:1.05rem}
+
+/* Cover grid */
+.cover-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:12px}
+.cover{position:relative;aspect-ratio:1/1;border-radius:var(--r-lg);border:2px solid var(--line);background:var(--pink-50);overflow:hidden;cursor:pointer;transition:all var(--dur)}
+.cover:hover{transform:translateY(-2px)}
+.cover img{width:100%;height:100%;object-fit:cover}
+.cover input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2}
+.cover.is-selected{border-color:var(--purple-400);box-shadow:0 0 0 4px rgba(167,139,250,.22)}
+.cover__tick{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--pink-500),var(--purple-500));color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:700;opacity:0;transform:scale(.6);transition:all var(--dur)}
+.cover.is-selected .cover__tick{opacity:1;transform:scale(1)}
+
+/* Category picker */
+.cat-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
+.cat-chip{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 8px 12px;border-radius:var(--r-lg);border:2px solid var(--line);background:var(--white);cursor:pointer;transition:all var(--dur);text-align:center}
+.cat-chip:hover{transform:translateY(-2px);box-shadow:var(--sh-sm)}
+.cat-chip input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2}
+.cat-chip__img{width:48px;height:48px;border-radius:14px;object-fit:contain;background:var(--pink-50);padding:6px}
+.cat-chip__label{font-size:.88rem;font-weight:600;color:var(--ink-700);line-height:1.3}
+.cat-chip.is-selected{border-color:var(--purple-400);background:linear-gradient(180deg,var(--pink-50),var(--purple-50));box-shadow:0 0 0 4px rgba(167,139,250,.16)}
+.cat-chip.is-selected .cat-chip__label{color:var(--pink-700)}
+
+.cat-picker__actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+
+/* Form actions */
+.form-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+.form-actions .btn{flex:1 1 220px}
+.form-msg{text-align:center;min-height:1.4em;margin:8px 0 0;font-size:.92rem;color:var(--ink-500)}
+.form-msg.is-error{color:#c0264b}
+.form-msg.is-ok{color:#17805a}
+.form-note{text-align:center;font-size:.82rem;color:var(--ink-500);margin:14px auto 0;max-width:560px}
+
+/* Success modal */
+.modal{position:fixed;inset:0;z-index:500;display:grid;place-items:center;padding:16px}
+.modal[hidden]{display:none}
+.modal__backdrop{position:absolute;inset:0;background:rgba(45,27,61,.5);backdrop-filter:blur(4px);animation:fadeIn .2s var(--ease)}
+.modal__panel{position:relative;width:100%;max-width:520px;background:var(--white);border-radius:var(--r-xl);box-shadow:0 30px 70px rgba(45,27,61,.3);animation:modalIn .25s var(--ease);overflow:hidden}
+.modal__head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 12px;border-bottom:1px solid var(--line)}
+.modal__title{font-family:var(--font-display);font-size:1.15rem;margin:0}
+.modal__close{width:34px;height:34px;border-radius:50%;background:var(--pink-50);color:var(--ink-700);font-size:1rem}
+.modal__body{padding:20px 22px}
+.modal__foot{padding:14px 22px 20px;display:flex;justify-content:flex-end;gap:10px}
+.success__emoji{font-size:2.4rem;text-align:center;margin:6px 0 10px}
+.share-row{display:flex;gap:8px;margin-top:14px}
+.share-row .input{flex:1 1 auto;min-width:0;font-size:.9rem}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes modalIn{from{transform:translateY(20px) scale(.98);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+
+/* Honeypot */
+.hp{position:absolute!important;left:-10000px!important;width:1px;height:1px;overflow:hidden}
+
+@media (max-width:640px){
+  .create-form{padding:16px 12px 80px}
+  .form-card{padding:20px 16px 22px;border-radius:var(--r-lg)}
+  .form-actions .btn{flex:1 1 100%}
+  .share-row{flex-direction:column}
+  .share-row .btn{width:100%}
+  .modal__foot{flex-direction:column-reverse}
+  .modal__foot .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+
+<body>
+<a class="skip-link" href="#main">মূল অংশে যাও</a>
+
+<header class="site-header" id="siteHeader">
+  <div class="container header__inner">
+    <a class="brand" href="index.html" aria-label="হোম">
+      <img class="brand__logo" id="brandLogo" src="images/logo.png" alt="" width="44" height="44" data-emoji="💞" />
+      <span class="brand__text">
+        <strong class="brand__name" id="brandName">বন্ধু কুইজ</strong>
+        <small class="brand__tag" id="brandTag">বন্ধুত্বের মজার পরীক্ষা</small>
+      </span>
+    </a>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="মেনু">
+      <span class="nav-toggle__bar"></span>
+      <span class="nav-toggle__bar"></span>
+      <span class="nav-toggle__bar"></span>
+    </button>
+    <nav class="site-nav" id="primaryNav" aria-label="প্রধান মেনু">
+      <ul class="site-nav__list">
+        <li><a class="site-nav__link" href="index.html" data-nav="home">হোম</a></li>
+        <li><a class="site-nav__link is-active" href="create.html" data-nav="create">কুইজ বানাও</a></li>
+        <li><a class="site-nav__link" href="index.html#how-to-play" data-nav="howto">কীভাবে খেলতে হয়?</a></li>
+        <li><a class="site-nav__link" href="index.html#featured" data-nav="featured">ফিচার্ড কুইজ</a></li>
+        <li><a class="site-nav__link" href="contact.html" data-nav="contact">যোগাযোগ</a></li>
+      </ul>
+      <div class="lang-switch" role="group" aria-label="ভাষা">
+        <button type="button" class="lang-switch__btn" data-lang="bn" aria-pressed="false">বাংলা</button>
+        <button type="button" class="lang-switch__btn" data-lang="en" aria-pressed="false">English</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="create-hero">
+    <div class="container create-hero__inner">
+      <p class="create-hero__badge"><span aria-hidden="true">✨</span> <span id="crBadge">ধাপে ধাপে সহজ</span></p>
+      <h1 class="create-hero__title" id="crTitle">নিজের কুইজ বানাও</h1>
+      <p class="create-hero__sub" id="crSub">তোমার নাম, প্রশ্ন আর সঠিক উত্তর দিয়ে কুইজ সাজাও। শেষে শেয়ার লিংক কপি করে বন্ধুকে পাঠাও।</p>
+    </div>
+  </section>
+
+  <form class="create-form" id="createForm" novalidate autocomplete="off">
+
+    <!-- STEP 1 -->
+    <section class="form-card">
+      <header class="form-card__head">
+        <span class="form-card__step" aria-hidden="true">1</span>
+        <h2 class="form-card__title" id="crStep1Title">তোমার পরিচয়</h2>
+      </header>
+
+      <div class="field">
+        <label class="field__label" for="creatorName">
+          <span id="crNameLabel">তোমার নাম বা ডাকনাম</span>
+          <span class="field__req" aria-hidden="true">*</span>
+        </label>
+        <input id="creatorName" name="creatorName" type="text" class="input" maxlength="40" required
+               autocomplete="nickname" placeholder="যেমন: মনজিত" />
+        <p class="field__hint" id="crNameHint">এই নামটাই প্রশ্নে বসবে — যেমন “মনজিতের পছন্দের খাবার কী?”</p>
+        <p class="field__error" id="errName" hidden></p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="quizTitle">
+          <span id="crQuizTitleLabel">কুইজের টাইটেল</span>
+          <span class="field__opt">(ঐচ্ছিক)</span>
+        </label>
+        <input id="quizTitle" name="quizTitle" type="text" class="input" maxlength="120" placeholder="আমাকে কতটা চিনিস?" />
+        <p class="field__hint">ফাঁকা রাখলে নাম থেকে অটোমেটিক টাইটেল বানানো হবে।</p>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="quizDesc">
+          <span id="crDescLabel">বিবরণ</span>
+          <span class="field__opt">(ঐচ্ছিক)</span>
+        </label>
+        <textarea id="quizDesc" name="quizDesc" class="input input--area" maxlength="280" rows="3" placeholder="আমার সম্পর্কে কতটা জানিস দেখি!"></textarea>
+        <p class="field__hint" id="descCount">0 / 280</p>
+      </div>
+
+      <fieldset class="field field--fieldset">
+        <legend class="field__label" id="crLangLabel">কুইজের ভাষা</legend>
+        <div class="chip-radio" role="radiogroup" aria-label="Quiz language">
+          <label class="chip-radio__item">
+            <input type="radio" name="quizLang" value="bn" checked />
+            <span>বাংলা</span>
+          </label>
+          <label class="chip-radio__item">
+            <input type="radio" name="quizLang" value="en" />
+            <span>English</span>
+          </label>
+          <label class="chip-radio__item">
+            <input type="radio" name="quizLang" value="mixed" />
+            <span>মিক্সড</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="field field--fieldset">
+        <legend class="field__label" id="crCoverLabel">কভার ছবি বেছে নাও</legend>
+        <div class="cover-grid" id="coverGrid" role="radiogroup" aria-label="Cover image"></div>
+      </fieldset>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="form-card">
+      <header class="form-card__head">
+        <span class="form-card__step" aria-hidden="true">2</span>
+        <h2 class="form-card__title" id="crStep2Title">ক্যাটাগরি বেছে নাও</h2>
+      </header>
+      <p class="form-card__sub" id="crStep2Sub">কোন কোন বিষয়ে প্রশ্ন করতে চাও? একাধিক বেছে নিতে পারো।</p>
+
+      <div class="cat-picker" id="catPicker" role="group"></div>
+
+      <div class="cat-picker__actions">
+        <button type="button" class="btn btn--ghost btn--sm" id="selectAllCats" data-i18n="selectAll">সব বেছে নাও</button>
+        <button type="button" class="btn btn--ghost btn--sm" id="clearCats" data-i18n="clear">ক্লিয়ার</button>
+      </div>
+    </section>
+
+    <!-- ACTION -->
+    <div class="form-actions">
+      <button type="submit" class="btn btn--primary btn--lg" id="continueBtn">
+        <span aria-hidden="true">➡️</span>
+        <span id="crContinueLabel">পরবর্তী — প্রশ্ন যোগ করো</span>
+      </button>
+    </div>
+
+    <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
+    <p class="form-note">নোট: এই কুইজের উত্তর যাচাই ব্রাউজারে হয় — বন্ধুত্বের মজার জন্য এটা যথেষ্ট, তবে সম্পূর্ণ গোপনীয় নয়।</p>
+  </form>
+
+  <!-- hidden honeypot -->
+  <div class="hp" aria-hidden="true">
+    <label><span>Leave this empty</span><input type="text" id="honeypot" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <img class="footer__logo" id="footerLogo" src="images/logo.png" alt="" width="40" height="40" data-emoji="💞" />
+      <strong class="footer__name" id="footerName">বন্ধু কুইজ</strong>
+      <p class="footer__tagline" id="footerTagline">বন্ধুত্বের মজার পরীক্ষা — বন্ধুকে চেনার সবচেয়ে মজার উপায়।</p>
+    </div>
+    <nav class="footer__nav" aria-label="ফুটার">
+      <ul>
+        <li><a href="index.html">হোম</a></li>
+        <li><a href="create.html">কুইজ বানাও</a></li>
+        <li><a href="contact.html">যোগাযোগ</a></li>
+        <li><a href="privacy.html">প্রাইভেসি পলিসি</a></li>
+        <li><a href="terms.html">শর্তাবলি</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="container footer__bottom">
+    <p>© <span id="year">2025</span> <span id="footerBrand2">বন্ধু কুইজ</span></p>
+    <p>ভালোবাসা দিয়ে বানানো 💗</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script type="module">
+import { db, doc, getDoc, setDoc, serverTimestamp } from './firebase-config.js';
+import { loadSiteConfig, cfgText } from './site-config.js';
+
+/* =========================================================
+   Language
+   ========================================================= */
+const STORAGE_KEY = 'bq.lang';
+const SUPPORTED = ['bn','en'];
+function getLang(){
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved && SUPPORTED.includes(saved)) return saved;
+  return 'bn';
+}
+function setLang(lang){
+  if (!SUPPORTED.includes(lang)) return;
+  localStorage.setItem(STORAGE_KEY, lang);
+  applyAll();
+}
+
+/* =========================================================
+   Site config
+   ========================================================= */
+let CFG = null;
+
+async function loadConfigAndApply(){
+  try { CFG = await loadSiteConfig(); } catch(e) { console.warn(e); }
+  applyAll();
+}
+
+function applyAll(){
+  const lang = getLang();
+  document.documentElement.setAttribute('lang', lang);
+
+  // Header/footer
+  setText('brandName', cfgText(CFG, 'brand_name', lang) || 'বন্ধু কুইজ');
+  setText('brandTag', cfgText(CFG, 'brand_tag', lang) || 'বন্ধুত্বের মজার পরীক্ষা');
+  setText('footerName', cfgText(CFG, 'brand_name', lang) || 'বন্ধু কুইজ');
+  setText('footerBrand2', cfgText(CFG, 'brand_name', lang) || 'বন্ধু কুইজ');
+  setImg('brandLogo', CFG?.logo_image);
+  setImg('footerLogo', CFG?.logo_image);
+
+  // Hero
+  setText('crBadge', lang === 'en' ? 'Simple & step by step' : 'ধাপে ধাপে সহজ');
+  setText('crTitle', lang === 'en' ? 'Create your quiz' : 'নিজের কুইজ বানাও');
+  setText('crSub', lang === 'en'
+    ? 'Add your name, questions, and the correct answers. Then copy the share link and send it to friends.'
+    : 'তোমার নাম, প্রশ্ন আর সঠিক উত্তর দিয়ে কুইজ সাজাও। শেষে শেয়ার লিংক কপি করে বন্ধুকে পাঠাও।');
+
+  // Step 1
+  setText('crStep1Title', lang === 'en' ? 'Your details' : 'তোমার পরিচয়');
+  setText('crNameLabel', lang === 'en' ? 'Your name or nickname' : 'তোমার নাম বা ডাকনাম');
+  setText('crNameHint', lang === 'en'
+    ? 'This name appears inside the questions — e.g. “What is Manjit’s favourite food?”'
+    : 'এই নামটাই প্রশ্নে বসবে — যেমন “মনজিতের পছন্দের খাবার কী?”');
+  setText('crQuizTitleLabel', lang === 'en' ? 'Quiz title' : 'কুইজের টাইটেল');
+  setText('crDescLabel', lang === 'en' ? 'Description' : 'বিবরণ');
+  setText('crLangLabel', lang === 'en' ? 'Quiz language' : 'কুইজের ভাষা');
+  setText('crCoverLabel', lang === 'en' ? 'Pick a cover image' : 'কভার ছবি বেছে নাও');
+
+  // Step 2
+  setText('crStep2Title', lang === 'en' ? 'Choose categories' : 'ক্যাটাগরি বেছে নাও');
+  setText('crStep2Sub', lang === 'en'
+    ? 'Which topics do you want to ask about? You can pick more than one.'
+    : 'কোন কোন বিষয়ে প্রশ্ন করতে চাও? একাধিক বেছে নিতে পারো।');
+
+  // Continue button
+  setText('crContinueLabel', lang === 'en'
+    ? 'Next — add questions'
+    : 'পরবর্তী — প্রশ্ন যোগ করো');
+
+  // Lang buttons
+  document.querySelectorAll('.lang-switch__btn').forEach((btn) => {
+    const active = btn.dataset.lang === lang;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-pressed', String(active));
+  });
+
+  // Re-render grids
+  renderCoverGrid();
+  renderCategoryPicker();
+
+  // Placeholder for name
+  const nameInput = document.getElementById('creatorName');
+  if (nameInput) nameInput.placeholder = lang === 'en' ? 'e.g. Manjit' : 'যেমন: মনজিত';
+
+  // Fallback for images
+  initImgFallbacks(document);
+}
+
+function setText(id, value){
+  const el = document.getElementById(id);
+  if (!el || value == null) return;
+  el.textContent = value;
+}
+function setImg(id, value){
+  const el = document.getElementById(id);
+  if (!el || !value) return;
+  el.src = value;
+}
+
+/* =========================================================
+   State
+   ========================================================= */
+const state = {
+  creatorName: '',
+  title: '',
+  description: '',
+  language: 'bn',
+  coverImage: '',
+  categories: [],
+  saving: false,
+  quizCode: null
+};
+
+/* =========================================================
+   Cover grid
+   ========================================================= */
+function renderCoverGrid(){
+  const grid = document.getElementById('coverGrid');
+  if (!grid) return;
+  const covers = [
+    { path: CFG?.hero_image || 'images/hero-friends.png', emoji: '🧑‍🤝‍🧑' },
+    { path: CFG?.howto_image || 'images/friendship.png', emoji: '🤝' },
+    { path: 'images/food-biryani.png', emoji: '🍛' },
+    { path: 'images/birthday.png', emoji: '🎂' },
+    { path: 'images/music.png', emoji: '🎵' },
+    { path: 'images/travel.png', emoji: '✈️' }
+  ];
+
+  if (!state.coverImage) state.coverImage = covers[0].path;
+
+  grid.innerHTML = covers.map((c) => `
+    <label class="cover ${state.coverImage === c.path ? 'is-selected' : ''}">
+      <img src="${escapeAttr(c.path)}" alt="" data-emoji="${escapeAttr(c.emoji)}" />
+      <input type="radio" name="coverImage" value="${escapeAttr(c.path)}" ${state.coverImage === c.path ? 'checked' : ''} />
+      <span class="cover__tick" aria-hidden="true">✓</span>
+    </label>
+  `).join('');
+
+  grid.querySelectorAll('input[name="coverImage"]').forEach((r) => {
+    r.addEventListener('change', () => {
+      state.coverImage = r.value;
+      grid.querySelectorAll('.cover').forEach((el) => {
+        el.classList.toggle('is-selected', el.querySelector('input').value === state.coverImage);
+      });
+    });
+  });
+
+  initImgFallbacks(grid);
+}
+
+/* =========================================================
+   Category picker
+   ========================================================= */
+function renderCategoryPicker(){
+  const picker = document.getElementById('catPicker');
+  if (!picker || !CFG?.categories) return;
+  const lang = getLang();
+
+  const keys = Object.keys(CFG.categories);
+  picker.innerHTML = keys.map((key) => {
+    const c = CFG.categories[key];
+    const label = lang === 'en' ? (c.label_en || c.label_bn) : (c.label_bn || c.label_en);
+    const selected = state.categories.includes(key);
+    return `
+      <label class="cat-chip ${selected ? 'is-selected' : ''}">
+        <img class="cat-chip__img" src="${escapeAttr(c.image || 'images/default-question.png')}"
+             alt="" width="48" height="48" data-emoji="${escapeAttr(c.emoji || '❓')}" />
+        <input type="checkbox" value="${escapeAttr(key)}" ${selected ? 'checked' : ''} />
+        <span class="cat-chip__label">${escapeHtml(label)}</span>
+      </label>`;
+  }).join('');
+
+  picker.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+    cb.addEventListener('change', () => {
+      const key = cb.value;
+      if (cb.checked) {
+        if (!state.categories.includes(key)) state.categories.push(key);
+      } else {
+        state.categories = state.categories.filter((k) => k !== key);
+      }
+      cb.closest('.cat-chip').classList.toggle('is-selected', cb.checked);
+    });
+  });
+
+  initImgFallbacks(picker);
+}
+
+/* =========================================================
+   Random quiz code
+   ========================================================= */
+const CODE_ALPHABET = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function randomCode(len = 8){
+  const bytes = new Uint8Array(len);
+  crypto.getRandomValues(bytes);
+  let out = '';
+  for (let i = 0; i < len; i++) out += CODE_ALPHABET[bytes[i] % CODE_ALPHABET.length];
+  return out;
+}
+async function generateUniqueCode(maxTries = 8){
+  for (let i = 0; i < maxTries; i++) {
+    const code = randomCode(8);
+    const snap = await getDoc(doc(db, 'quizzes', code));
+    if (!snap.exists()) return code;
+  }
+  throw new Error('Could not generate unique code');
+}
+
+/* =========================================================
+   Save quiz
+   ========================================================= */
+async function saveQuiz(payload){
+  const code = await generateUniqueCode();
+  await setDoc(doc(db, 'quizzes', code), {
+    creatorName: payload.creatorName,
+    title: payload.title || '',
+    description: payload.description || '',
+    language: payload.language,
+    coverImage: payload.coverImage,
+    categories: payload.categories,
+    questions: [],
+    questionCount: 0,
+    published: false,
+    closed: false,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp()
+  });
+  return code;
+}
+
+/* =========================================================
+   Form events
+   ========================================================= */
+function bindForm(){
+  const form = document.getElementById('createForm');
+  const nameInput = document.getElementById('creatorName');
+  const titleInput = document.getElementById('quizTitle');
+  const descInput = document.getElementById('quizDesc');
+  const descCount = document.getElementById('descCount');
+  const errName = document.getElementById('errName');
+  const formMsg = document.getElementById('formMsg');
+  const continueBtn = document.getElementById('continueBtn');
+
+  nameInput.addEventListener('input', () => {
+    state.creatorName = nameInput.value.trim();
+    updateNameHint();
+    clearError(errName);
+  });
+  titleInput.addEventListener('input', () => { state.title = titleInput.value.trim(); });
+  descInput.addEventListener('input', () => {
+    state.description = descInput.value;
+    descCount.textContent = `${state.description.length} / 280`;
+  });
+
+  document.querySelectorAll('input[name="quizLang"]').forEach((r) => {
+    r.addEventListener('change', () => { state.language = r.value; });
+  });
+
+  document.getElementById('selectAllCats').addEventListener('click', () => {
+    state.categories = Object.keys(CFG.categories || {});
+    document.querySelectorAll('#catPicker input[type="checkbox"]').forEach((cb) => {
+      cb.checked = true;
+      cb.closest('.cat-chip').classList.add('is-selected');
+    });
+  });
+  document.getElementById('clearCats').addEventListener('click', () => {
+    state.categories = [];
+    document.querySelectorAll('#catPicker input[type="checkbox"]').forEach((cb) => {
+      cb.checked = false;
+      cb.closest('.cat-chip').classList.remove('is-selected');
+    });
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (state.saving) return;
+    clearError(errName);
+    formMsg.textContent = '';
+    formMsg.className = 'form-msg';
+
+    const name = nameInput.value.trim();
+    if (!name) {
+      showError(errName, getLang() === 'en' ? 'Please enter your name.' : 'তোমার নাম লেখো।');
+      nameInput.focus();
+      return;
+    }
+    if (name.length < 2) {
+      showError(errName, getLang() === 'en' ? 'Name must be at least 2 characters.' : 'নামটা অন্তত ২ অক্ষরের হতে হবে।');
+      nameInput.focus();
+      return;
+    }
+
+    if (state.categories.length === 0) {
+      setFormMsg(getLang() === 'en' ? 'Pick at least one category.' : 'অন্তত একটি ক্যাটাগরি বেছে নাও।', 'error');
+      return;
+    }
+
+    // Honeypot
+    if (document.getElementById('honeypot').value) return;
+
+    state.saving = true;
+    continueBtn.disabled = true;
+    const originalLabel = continueBtn.querySelector('span:last-child').textContent;
+    continueBtn.querySelector('span:last-child').textContent =
+      getLang() === 'en' ? 'Saving…' : 'সেভ হচ্ছে…';
+
+    try {
+      const code = await saveQuiz({
+        creatorName: name,
+        title: state.title || defaultTitle(name, getLang()),
+        description: state.description,
+        language: state.language,
+        coverImage: state.coverImage,
+        categories: state.categories.slice()
+      });
+
+      state.quizCode = code;
+      setFormMsg(getLang() === 'en' ? 'Saved! Loading question builder…' : 'সেভ হয়েছে! প্রশ্ন বিল্ডারে নিয়ে যাচ্ছি…', 'ok');
+
+      // Navigate to questions.html
+      window.location.href = `questions.html?id=${encodeURIComponent(code)}`;
+    } catch (err) {
+      console.error('[create] save failed', err);
+      setFormMsg(getLang() === 'en'
+        ? 'Couldn’t save. Check your connection and try again.'
+        : 'সেভ করা যায়নি। ইন্টারনেট চেক করে আবার চেষ্টা কর।', 'error');
+      state.saving = false;
+      continueBtn.disabled = false;
+      continueBtn.querySelector('span:last-child').textContent = originalLabel;
+    }
+  });
+
+  nameInput.addEventListener('input', updateNameHint);
+}
+
+function updateNameHint(){
+  const raw = document.getElementById('creatorName').value.trim();
+  const hint = document.getElementById('crNameHint');
+  if (!hint) return;
+  const lang = getLang();
+  if (!raw) {
+    hint.textContent = lang === 'en'
+      ? 'This name appears inside the questions — e.g. “What is Manjit’s favourite food?”'
+      : 'এই নামটাই প্রশ্নে বসবে — যেমন “মনজিতের পছন্দের খাবার কী?”';
+    return;
+  }
+  const suffix = lang === 'en' ? raw : formatNameBn(raw);
+  hint.textContent = lang === 'en'
+    ? `Example: “What is ${raw}’s favourite food?”`
+    : `যেমন: “${suffix}ের পছন্দের খাবার কী?”`;
+}
+
+function formatNameBn(name){
+  const trimmed = String(name || '').trim();
+  if (!trimmed) return '';
+  const last = trimmed.slice(-1);
+  if (/[ািীুূৃেৈোৌ]/.test(last)) return trimmed + 'র';
+  return trimmed + 'ের';
+}
+
+function defaultTitle(creator, lang){
+  const name = (creator || '').trim();
+  if (!name) return lang === 'en' ? 'How well do you know me?' : 'আমাকে কতটা চিনিস?';
+  if (lang === 'en') return `How well do you know ${name}?`;
+  return `${name}কে তুই কতটা চিনিস?`;
+}
+
+/* =========================================================
+   Error helpers
+   ========================================================= */
+function showError(el, msg){
+  el.textContent = msg;
+  el.hidden = false;
+}
+function clearError(el){
+  el.textContent = '';
+  el.hidden = true;
+}
+function setFormMsg(msg, kind = ''){
+  const el = document.getElementById('formMsg');
+  el.textContent = msg || '';
+  el.className = 'form-msg' + (kind ? ` is-${kind}` : '');
+}
+
+/* =========================================================
+   Layout
+   ========================================================= */
+function initHeaderScroll(){
+  const h = document.getElementById('siteHeader');
+  if (!h) return;
+  const onScroll = () => h.classList.toggle('is-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+}
+function initMobileMenu(){
+  const toggle = document.getElementById('navToggle');
+  const nav = document.getElementById('primaryNav');
+  if (!toggle || !nav) return;
+  const close = () => { nav.classList.remove('is-open'); toggle.setAttribute('aria-expanded','false'); };
+  toggle.addEventListener('click', () => { const open = nav.classList.toggle('is-open'); toggle.setAttribute('aria-expanded', String(open)); });
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
+  document.addEventListener('click', (e) => {
+    if (!nav.classList.contains('is-open')) return;
+    if (nav.contains(e.target) || toggle.contains(e.target)) return;
+    close();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && nav.classList.contains('is-open')) { close(); toggle.focus(); } });
+  window.addEventListener('resize', () => { if (window.innerWidth > 900) close(); });
+}
+function initLangSwitch(){
+  document.querySelectorAll('.lang-switch__btn').forEach(btn => {
+    btn.addEventListener('click', () => setLang(btn.dataset.lang));
+  });
+}
+function initFooterYear(){
+  const el = document.getElementById('year');
+  if (el) el.textContent = new Date().getFullYear();
+}
+
+/* =========================================================
+   Image fallback
+   ========================================================= */
+function attachImageFallback(img){
+  if (!img || img.dataset.fallbackBound === '1') return;
+  img.dataset.fallbackBound = '1';
+  const swap = () => {
+    const emoji = img.dataset.emoji || '🖼️';
+    const span = document.createElement('span');
+    span.className = 'img-fallback ' + (img.className || '');
+    span.setAttribute('role','img');
+    span.setAttribute('aria-label', img.getAttribute('alt') || '');
+    span.textContent = emoji;
+    if (img.width) span.style.width = img.width + 'px';
+    if (img.height) span.style.height = img.height + 'px';
+    span.style.width = span.style.width || '48px';
+    span.style.height = span.style.height || '48px';
+    img.replaceWith(span);
+  };
+  img.addEventListener('error', swap, { once: true });
+  if (img.complete && img.naturalWidth === 0) swap();
+}
+function initImgFallbacks(root){
+  root.querySelectorAll('img[data-emoji]').forEach(attachImageFallback);
+}
+
+/* =========================================================
+   Utils
+   ========================================================= */
+function escapeHtml(s){
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function escapeAttr(s){ return escapeHtml(s); }
+
+/* =========================================================
+   Boot
+   ========================================================= */
+document.addEventListener('DOMContentLoaded', async () => {
+  initHeaderScroll();
+  initMobileMenu();
+  initLangSwitch();
+  initFooterYear();
+
+  await loadConfigAndApply();
+  bindForm();
+
+  document.addEventListener('langchange', () => applyAll());
+});
+</script>
+</body>
+</html>

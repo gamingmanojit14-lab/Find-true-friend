@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="bn" data-lang="bn">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>অ্যাডমিন প্যানেল — বন্ধু কুইজ</title>
+<meta name="robots" content="noindex,nofollow" />
+<meta name="theme-color" content="#f9488b" />
+<link rel="icon" href="images/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Baloo+2:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+:root{
+  --pink-50:#fff1f7;--pink-100:#ffd6e8;--pink-200:#ffb8d5;--pink-400:#ff5fa2;
+  --pink-500:#f9488b;--pink-600:#d92e6f;--pink-700:#a81550;
+  --purple-50:#f5f1ff;--purple-100:#ede9fe;--purple-400:#a78bfa;--purple-500:#7c3aed;
+  --cream:#fff7f0;--blush:#fff0f5;
+  --ink-900:#2d1b3d;--ink-700:#5b4b6e;--ink-500:#8b7f9e;--ink-300:#c9c0d8;
+  --line:#efe7f5;--white:#ffffff;
+  --ok-bg:#f2fdf7;--ok-line:#a0e2c2;--ok-ink:#0f6b47;
+  --err-bg:#fff6f9;--err-line:#f5c2d1;--err-ink:#8a1538;
+  --warn-bg:#fffaf0;--warn-line:#f5d78e;--warn-ink:#7a5a00;
+  --r-sm:10px;--r-md:16px;--r-lg:22px;--r-xl:32px;--r-pill:999px;
+  --sh-sm:0 2px 8px rgba(124,58,237,.06);
+  --sh-md:0 10px 30px rgba(124,58,237,.10);
+  --sh-brand:0 12px 28px rgba(249,72,139,.28);
+  --ease:cubic-bezier(.22,.61,.36,1);--dur:.22s;
+  --font-bn:'Hind Siliguri',system-ui,sans-serif;
+  --font-display:'Baloo 2','Hind Siliguri',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--font-bn);font-size:16px;line-height:1.6;color:var(--ink-900);background:var(--cream);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:var(--pink-700);text-decoration:none}
+ul,ol{margin:0;padding:0;list-style:none}
+h1,h2,h3,h4{margin:0 0 .5em;line-height:1.25;color:var(--ink-900)}
+p{margin:0 0 1em}
+:focus-visible{outline:3px solid var(--purple-400);outline-offset:2px;border-radius:6px}
+
+.container{max-width:1280px;margin:0 auto;padding:0 18px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.img-fallback{display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--pink-100),var(--purple-100));border-radius:inherit;font-size:1.6rem;line-height:1}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border-radius:var(--r-pill);background:var(--pink-500);color:#fff;font-weight:600;font-size:.95rem;line-height:1.2;text-decoration:none;border:2px solid transparent;transition:transform var(--dur) var(--ease),box-shadow var(--dur) var(--ease),background var(--dur) var(--ease);white-space:nowrap}
+.btn:hover{transform:translateY(-1px);text-decoration:none}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn--primary{background:linear-gradient(135deg,var(--pink-500),var(--purple-500));color:#fff;box-shadow:var(--sh-brand)}
+.btn--ghost{background:var(--white);color:var(--pink-700);border-color:var(--pink-200);box-shadow:var(--sh-sm)}
+.btn--ghost:hover{background:var(--pink-50);border-color:var(--pink-400)}
+.btn--danger{background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff}
+.btn--sm{padding:7px 14px;font-size:.85rem}
+.btn--lg{padding:14px 26px;font-size:1.05rem}
+.btn--block{width:100%}
+
+/* Inputs */
+.input{width:100%;padding:11px 14px;border-radius:var(--r-md);border:2px solid var(--line);background:var(--white);color:var(--ink-900);font-size:.95rem;transition:border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease)}
+.input:focus{outline:none;border-color:var(--purple-400);box-shadow:0 0 0 4px rgba(167,139,250,.15)}
+.input--area{resize:vertical;min-height:70px;font-family:inherit;line-height:1.5}
+
+/* Header */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.header__inner{min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink-900)}
+.brand__logo{width:40px;height:40px;border-radius:12px;background:var(--pink-50);padding:5px}
+.brand__name{font-family:var(--font-display);font-weight:700;font-size:1.1rem}
+.brand__tag{font-size:.75rem;color:var(--ink-500);display:block}
+
+/* Header right */
+.header-right{display:flex;align-items:center;gap:10px}
+
+/* Login */
+.login-wrap{max-width:440px;margin:60px auto;padding:0 18px}
+.login-card{background:var(--white);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh-md);padding:32px 26px}
+.login-card__icon{width:64px;height:64px;border-radius:20px;margin:0 auto 16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--pink-100),var(--purple-100));font-size:1.8rem}
+.login-card__title{font-family:var(--font-display);font-size:1.5rem;text-align:center;margin-bottom:6px}
+.login-card__sub{text-align:center;color:var(--ink-500);font-size:.92rem;margin-bottom:22px}
+.field{margin-bottom:16px}
+.field__label{display:block;font-weight:600;font-size:.9rem;margin-bottom:6px}
+.field__hint{font-size:.8rem;color:var(--ink-500);margin-top:5px}
+.field__error{background:var(--err-bg);border:1px solid var(--err-line);color:var(--err-ink);padding:9px 12px;border-radius:10px;font-size:.86rem;margin-top:8px}
+.field__error[hidden]{display:none}
+
+/* Admin layout */
+.admin-wrap{padding:22px 0 80px}
+.admin-tabs{display:flex;gap:6px;overflow-x:auto;padding:6px;background:var(--white);border:1px solid var(--line);border-radius:var(--r-pill);box-shadow:var(--sh-sm);margin-bottom:22px;scrollbar-width:none}
+.admin-tabs::-webkit-scrollbar{display:none}
+.admin-tab{padding:9px 16px;border-radius:var(--r-pill);font-size:.9rem;font-weight:600;color:var(--ink-500);white-space:nowrap;transition:all var(--dur) var(--ease)}
+.admin-tab:hover{color:var(--ink-900);background:var(--pink-50)}
+.admin-tab.is-active{background:linear-gradient(135deg,var(--pink-500),var(--purple-500));color:#fff;box-shadow:0 6px 14px rgba(249,72,139,.25)}
+
+/* Panel */
+.panel{display:none}
+.panel.is-active{display:block;animation:fadeUp .28s var(--ease)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.panel-head{background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 22px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.panel-head__title{font-family:var(--font-display);font-size:1.2rem;margin:0}
+.panel-head__sub{color:var(--ink-500);font-size:.88rem;margin:0}
+
+.field-group{background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:20px 22px;margin-bottom:16px}
+.field-group__title{font-family:var(--font-display);font-size:1.02rem;margin:0 0 14px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+
+/* Category card */
+.cat-card{background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:18px;margin-bottom:14px}
+.cat-card__head{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed var(--line)}
+.cat-card__preview{width:56px;height:56px;border-radius:14px;background:var(--pink-50);display:grid;place-items:center;overflow:hidden;flex-shrink:0}
+.cat-card__preview img{width:100%;height:100%;object-fit:contain;padding:6px}
+.cat-card__preview span{font-size:1.6rem}
+.cat-card__key{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78rem;color:var(--ink-500);background:var(--pink-50);padding:2px 8px;border-radius:6px}
+.cat-card__title{font-weight:700;font-size:1rem;margin:0}
+
+/* Template options */
+.tmpl-options{display:grid;gap:10px;margin-top:12px}
+.tmpl-option{display:grid;grid-template-columns:56px 1fr 1fr;gap:10px;align-items:center;padding:10px;background:var(--pink-50);border-radius:14px}
+.tmpl-option__preview{width:52px;height:52px;border-radius:12px;background:var(--white);display:grid;place-items:center;overflow:hidden}
+.tmpl-option__preview img{width:100%;height:100%;object-fit:contain;padding:5px}
+.tmpl-option__preview span{font-size:1.3rem}
+.tmpl-option input{font-size:.86rem;padding:8px 10px}
+@media (max-width:640px){
+  .tmpl-option{grid-template-columns:48px 1fr;grid-template-areas:"preview bn" "preview en"}
+  .tmpl-option__preview{grid-area:preview;width:44px;height:44px}
+  .tmpl-option input:nth-child(2){grid-area:bn}
+  .tmpl-option input:nth-child(3){grid-area:en}
+}
+
+/* Bottom save bar */
+.save-bar{position:fixed;left:0;right:0;bottom:0;z-index:80;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:12px 0;box-shadow:0 -10px 30px rgba(124,58,237,.06)}
+.save-bar__inner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.save-bar__status{font-size:.88rem;color:var(--ink-500);font-weight:600}
+.save-bar__status.is-dirty{color:var(--warn-ink)}
+.save-bar__status.is-ok{color:var(--ok-ink)}
+.save-bar__status.is-error{color:var(--err-ink)}
+.save-bar__actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:84px;transform:translate(-50%,20px);background:var(--ink-900);color:#fff;padding:11px 20px;border-radius:var(--r-pill);font-size:.9rem;box-shadow:var(--sh-md);opacity:0;transition:all var(--dur) var(--ease);z-index:300}
+.toast.is-show{opacity:1;transform:translate(-50%,0)}
+.toast[hidden]{display:none}
+
+@media (max-width:640px){
+  .login-wrap{margin-top:24px}
+  .save-bar__inner{flex-direction:column;align-items:stretch}
+  .save-bar__actions{justify-content:stretch}
+  .save-bar__actions .btn{flex:1}
+}
+</style>
+</head>
+
+<body>
+<header class="site-header">
+  <div class="container header__inner">
+    <a class="brand" href="index.html">
+      <img class="brand__logo" src="images/logo.png" alt="" data-emoji="💞" />
+      <span>
+        <strong class="brand__name">বন্ধু কুইজ অ্যাডমিন</strong>
+        <small class="brand__tag">সব কিছু কন্ট্রোল করো</small>
+      </span>
+    </a>
+    <div class="header-right">
+      <a class="btn btn--ghost btn--sm" href="index.html" target="_blank">← হোম দেখো</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ============ LOGIN ============ -->
+  <section class="login-wrap" id="loginScreen">
+    <div class="login-card">
+      <div class="login-card__icon" aria-hidden="true">🔐</div>
+      <h1 class="login-card__title">অ্যাডমিন প্যানেল</h1>
+      <p class="login-card__sub">শুধু তুমি ঢুকতে পারবে</p>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label class="field__label" for="adminPass">অ্যাডমিন পাসওয়ার্ড</label>
+          <input id="adminPass" type="password" class="input" autocomplete="current-password" placeholder="••••••••" />
+        </div>
+        <p class="field__error" id="loginErr" hidden></p>
+        <button class="btn btn--primary btn--block btn--lg" type="submit" id="loginBtn">
+          <span aria-hidden="true">🔓</span> আনলক করো
+        </button>
+      </form>
+
+      <p style="margin-top:20px;font-size:.82rem;color:var(--ink-500);text-align:center;">
+        ⚠️ এই পাসওয়ার্ড যাচাই শুধু ব্রাউজারে হয় — এটা সম্পূর্ণ নিরাপদ নয়, শুধু ক্যাজুয়াল সুরক্ষা।
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ ADMIN PANEL ============ -->
+  <div class="admin-wrap container" id="adminPanel" hidden>
+
+    <nav class="admin-tabs" aria-label="অ্যাডমিন ট্যাব">
+      <button class="admin-tab is-active" data-tab="brand">🎨 ব্র্যান্ড</button>
+      <button class="admin-tab" data-tab="home">🏠 হোম</button>
+      <button class="admin-tab" data-tab="categories">📂 ক্যাটাগরি</button>
+      <button class="admin-tab" data-tab="templates">❓ প্রশ্ন টেমপ্লেট</button>
+      <button class="admin-tab" data-tab="quiz">📝 কুইজ পেজ</button>
+      <button class="admin-tab" data-tab="result">🏆 রেজাল্ট</button>
+      <button class="admin-tab" data-tab="pages">📄 অন্যান্য পেজ</button>
+    </nav>
+
+    <!-- Brand -->
+    <section class="panel is-active" data-panel="brand">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-head__title">ব্র্যান্ড ও লোগো</h2>
+          <p class="panel-head__sub">সাইটের নাম, ট্যাগলাইন, লোগো</p>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="grid-2">
+          <div class="field">
+            <label class="field__label">নাম (বাংলা)</label>
+            <input class="input" data-cfg="brand_name_bn" />
+          </div>
+          <div class="field">
+            <label class="field__label">Name (English)</label>
+            <input class="input" data-cfg="brand_name_en" />
+          </div>
+          <div class="field">
+            <label class="field__label">ট্যাগলাইন (বাংলা)</label>
+            <input class="input" data-cfg="brand_tag_bn" />
+          </div>
+          <div class="field">
+            <label class="field__label">Tagline (English)</label>
+            <input class="input" data-cfg="brand_tag_en" />
+          </div>
+          <div class="field">
+            <label class="field__label">লোগো ছবির path</label>
+            <input class="input" data-cfg="logo_image" placeholder="images/logo.png" />
+            <p class="field__hint">যেমন: images/logo.png</p>
+          </div>
+          <div class="field">
+            <label class="field__label">ডিফল্ট ভাষা</label>
+            <select class="input" data-cfg="default_lang">
+              <option value="bn">বাংলা</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Home -->
+    <section class="panel" data-panel="home">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-head__title">হোম পেজ</h2>
+          <p class="panel-head__sub">হিরো সেকশন, ছবি, ইমোজি, ৩টি ধাপ</p>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <h3 class="field-group__title">হিরো সেকশন</h3>
+        <div class="grid-2">
+          <div class="field">
+            <label class="field__label">হিরো টাইটেল (বাংলা)</label>
+            <input class="input" data-cfg="hero_title_bn" />
+          </div>
+          <div class="field">
+            <label class="field__label">Hero Title (English)</label>
+            <input class="input" data-cfg="hero_title_en" />
+          </div>
+          <div class="field">
+            <label class="field__label">হিরো সাবটাইটেল (বাংলা)</label>
+            <textarea class="input input--area" data-cfg="hero_subtitle_bn"></textarea>
+          </div>
+          <div class="field">
+            <label class="field__label">Hero Subtitle (English)</label>
+            <textarea class="input input--area" data-cfg="hero_subtitle_en"></textarea>
+          </div>
+          <div class="field">
+            <label class="field__label">হিরো ব্যাজ (বাংলা)</label>
+            <input class="input" data-cfg="hero_badge_bn" />
+          </div>
+          <div class="field">
+            <label class="field__label">Hero Badge (English)</label>
+            <input class="input" data-cfg="hero_badge_en" />
+          </div>
+          <div class="field">
+            <label class="field__label">হিরো ছবির path</label>
+            <input class="input" data-cfg="hero_image" placeholder="images/hero-friends.png" />
+          </div>
+          <div class="field">
+            <label class="field__label">ফ্লোটিং ইমোজি ১</label>
+            <input class="input" data-cfg="hero_emoji_1" maxlength="4" />
+          </div>
+          <div class="field">
+            <label class="field__label">ফ্লোটিং ইমোজি ২</label>
+            <input class="input" data-cfg="hero_emoji_2" maxlength="4" />
+          </div>
+          <div class="field">
+            <label class="field__label">ফ্লোটিং ইমোজি ৩</label>
+            <input class="input" data-cfg="hero_emoji_3" maxlength="4" />
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <h3 class="field-group__title">তিনটি তথ্য (ফ্যাক্ট)</h3>
+        <div class="grid-2">
+          <div class="field"><label class="field__label">ফ্যাক্ট ১ (বাংলা)</label><input class="input" data-cfg="hero_fact1_bn" /></div>
+          <div class="field"><label class="field__label">Fact 1 (English)</label><input class="input" data-cfg="hero_fact1_en" /></div>
+          <div class="field"><label class="field__label">ফ্যাক্ট ২ (বাংলা)</label><input class="input" data-cfg="hero_fact2_bn" /></div>
+          <div class="field"><label class="field__label">Fact 2 (English)</label><input class="input" data-cfg="hero_fact2_en" /></div>
+          <div class="field"><label class="field__label">ফ্যাক্ট ৩ (বাংলা)</label><input class="input" data-cfg="hero_fact3_bn" /></div>
+          <div class="field"><label class="field__label">Fact 3 (English)</label><input class="input" data-cfg="hero_fact3_en" /></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <h3 class="field-group__title">তিনটি ধাপ</h3>
+        <div class="grid-2">
+          <div class="field"><label class="field__label">সেকশন টাইটেল (বাংলা)</label><input class="input" data-cfg="steps_title_bn" /></div>
+          <div class="field"><label class="field__label">Section Title (English)</label><input class="input" data-cfg="steps_title_en" /></div>
+        </div>
+        <div class="grid-3" style="margin-top:14px">
+          <div class="field"><label class="field__label">ধাপ ১ — ইমোজি</label><input class="input" data-cfg="step1_emoji" maxlength="4" /></div>
+          <div class="field"><label class="field__label">ধাপ ১ — টাইটেল (বাংলা)</label><input class="input" data-cfg="step1_title_bn" /></div>
+          <div class="field"><label class="field__label">Step 1 Title (English)</label><input class="input" data-cfg="step1_title_en" /></div>
+          <div class="field"><label class="field__label">ধাপ ২ — ইমোজি</label><input class="input" data-cfg="step2_emoji" maxlength="4" /></div>
+          <div class="field"><label class="field__label">ধাপ ২ — টাইটেল (বাংলা)</label><input class="input" data-cfg="step2_title_bn" /></div>
+          <div class="field"><label class="field__label">Step 2 Title (English)</label><input class="input" data-cfg="step2_title_en" /></div>
+          <div class="field"><label class="field__label">ধাপ ৩ — ইমোজি</label><input class="input" data-cfg="step3_emoji" maxlength="4" /></div>
+          <div class="field"><label class="field__label">ধাপ ৩ — টাইটেল (বাংলা)</label><input class="input" data-cfg="step3_title_bn" /></div>
+          <div class="field"><label class="field__label">Step 3 Title (English)</label><input class="input" data-cfg="step3_title_en" /></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <h3 class="field-group__title">“কীভাবে খেলতে হয়” সেকশন</h3>
+        <div class="grid-2">
+          <div class="field"><label class="field__label">টাইটেল (বাংলা)</label><input class="input" data-cfg="howto_title_bn" /></div>
+          <div class="field"><label class="field__label">Title (English)</label><input class="input" data-cfg="howto_title_en" /></div>
+          <div class="field"><label class="field__label">ছবির path</label><input class="input" data-cfg="howto_image" placeholder="images/friendship.png" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="panel" data-panel="categories">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-head__title">ক্যাটাগরি</h2>
+          <p class="panel-head__sub">প্রতিটি ক্যাটাগরির নাম, ছবি, ইমোজি</p>
+        </div>
+      </div>
+      <div id="categoriesList"></div>
+    </section>
+
+    <!-- Templates -->
+    <section class="panel" data-panel="templates">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-head__title">প্রশ্নের টেমপ্লেট</h2>
+          <p class="panel-head__sub">প্রতিটি টেমপ্লেটের প্রশ্ন, ছবি, ৪টি অপশন</p>
+        </div>
+      </div>
+      <p class="field__hint" style="margin-bottom:16px">
+        <strong>{name}</strong> লিখলে সেটা ক্রিয়েটরের নাম দিয়ে replace হবে — যেমন “মনজিতের”।
+      </p>
+      <div id="templatesList"></div>
+    </section>
+
+    <!-- Quiz page -->
+    <section class="panel" data-panel="quiz">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-head__title">কুইজ পেজের লেখা</h2>
+          <p class="panel-head__sub">প্লেয়ার যখন কুইজ খেলবে তখন যা দেখবে</p>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="grid-2">
+          <div class="field"><label class="field__label">উপরের ছোট লেখা (বাংলা)</label><input class="input" data-cfg="quiz_intro_eyebrow_bn" /></div>
+          <div class="field"><label class="field__label">Eyebrow (English)</label><input class="input" data-cfg="quiz_intro_eyebrow_en" /></div>
+          <div class="field"><label class="field__label">ডাকনাম লেবেল (বাংলা)</label><input class="input" data-cfg="quiz_nick_label_bn" /></div>
+          <div class="field"><label class="field__label">Nickname label (English)</label><input class="input" data-cfg="quiz_nick_label_en" /></div>
+          <div class="field"><label class="field__label">শুরু বাটন (বাংলা)</label><input class="input" data-cfg="quiz_start_button_bn" /></div>
+          <div class="field"><label class="field__label">Start button (English)</label><input class="input" data-cfg="quiz_start_button_en" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Result -->
+    <section class="panel" data-panel="result">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-head__title">রেজাল্ট মেসেজ</h2>
+          <p class="panel-head__sub">স্কোর অনুযায়ী চারটি মেসেজ</p>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <h3 class="field-group__title">🏆 ৯০–১০০% (পারফেক্ট)</h3>
+        <div class="grid-2">
+          <div class="field"><label class="field__label">বাংলা</label><input class="input" data-cfg="tier_perfect_bn" /></div>
+          <div class="field"><label class="field__label">English</label><input class="input" data-cfg="tier_perfect_en" /></div>
+        </div>
+        <p class="field__hint">{name} লিখলে ক্রিয়েটরের নাম বসবে।</p>
+      </div>
+
+      <div class="field-group">
+        <h3 class="field-group__title">🥰 ৭০–৮৯% (দারুণ)</h3>
+        <div class="grid-2">
+          <div class="field"><label class="field__label">বাংলা</label><input class="input" data-cfg="tier_great_bn" /></div>
+          <div class="field"><label class="field__label">English</label><input class="input" data-cfg="tier_great_en" /></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <h3 class="field-group__title">😄 ৪০–৬৯% (ঠিক আছে)</h3>
+        <div class="grid-2">
+          <div class="field"><label class="field__label">বাংলা</label><input class="input" data-cfg="tier_mid_bn" /></div>
+          <div class="field"><label class="field__label">English</label><input class="input" data-cfg="tier_mid_en" /></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <h3 class="field-group__title">😂 ৪০% এর নিচে</h3>
+        <div class="grid-2">
+          <div class="field"><label class="field__label">বাংলা</label><input class="input" data-cfg="tier_low_bn" /></div>
+          <div class="field"><label class="field__label">English</label><input class="input" data-cfg="tier_low_en" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Other pages -->
+    <section class="panel" data-panel="pages">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-head__title">অন্যান্য পেজ</h2>
+          <p class="panel-head__sub">যোগাযোগ, প্রাইভেসি, শর্তাবলি</p>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <h3 class="field-group__title">যোগাযোগ</h3>
+        <div class="grid-2">
+          <div class="field"><label class="field__label">টাইটেল (বাংলা)</label><input class="input" data-cfg="contact_title_bn" /></div>
+          <div class="field"><label class="field__label">Title (English)</label><input class="input" data-cfg="contact_title_en" /></div>
+          <div class="field"><label class="field__label">সাবটাইটেল (বাংলা)</label><textarea class="input input--area" data-cfg="contact_sub_bn"></textarea></div>
+          <div class="field"><label class="field__label">Subtitle (English)</label><textarea class="input input--area" data-cfg="contact_sub_en"></textarea></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <h3 class="field-group__title">প্রাইভেসি</h3>
+        <div class="grid-2">
+          <div class="field"><label class="field__label">টাইটেল (বাংলা)</label><input class="input" data-cfg="privacy_title_bn" /></div>
+          <div class="field"><label class="field__label">Title (English)</label><input class="input" data-cfg="privacy_title_en" /></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <h3 class="field-group__title">শর্তাবলি</h3>
+        <div class="grid-2">
+          <div class="field"><label class="field__label">টাইটেল (বাংলা)</label><input class="input" data-cfg="terms_title_bn" /></div>
+          <div class="field"><label class="field__label">Title (English)</label><input class="input" data-cfg="terms_title_en" /></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- Bottom save bar -->
+<div class="save-bar" id="saveBar" hidden>
+  <div class="container save-bar__inner">
+    <span class="save-bar__status" id="saveStatus">পরিবর্তন হয়নি</span>
+    <div class="save-bar__actions">
+      <button class="btn btn--ghost btn--sm" id="resetBtn" type="button">↺ রিসেট</button>
+      <button class="btn btn--ghost btn--sm" id="reloadBtn" type="button">🔄 রিলোড</button>
+      <button class="btn btn--primary" id="saveBtn" type="button">
+        <span aria-hidden="true">💾</span> সব সেভ করো
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script type="module">
+import { db, doc, getDoc, setDoc, serverTimestamp } from './firebase-config.js';
+import { loadSiteConfig, saveSiteConfig, DEFAULT_CONFIG } from './site-config.js';
+
+/* =========================================================
+   Session
+   ========================================================= */
+const SESSION_KEY = 'bq.admin.session';
+const SESSION_TTL = 1000 * 60 * 60 * 2; // 2 hours
+
+function saveSession() {
+  try { sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ok: true, t: Date.now() })); } catch {}
+}
+function hasValidSession() {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return false;
+    const p = JSON.parse(raw);
+    if (!p.ok) return false;
+    if (Date.now() - p.t > SESSION_TTL) { sessionStorage.removeItem(SESSION_KEY); return false; }
+    return true;
+  } catch { return false; }
+}
+function clearSession() {
+  try { sessionStorage.removeItem(SESSION_KEY); } catch {}
+}
+
+/* =========================================================
+   Password hashing
+   ========================================================= */
+async function sha256Hex(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(String(text)));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+/* =========================================================
+   DOM
+   ========================================================= */
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+const els = {
+  loginScreen: $('#loginScreen'),
+  loginForm: $('#loginForm'),
+  adminPass: $('#adminPass'),
+  loginErr: $('#loginErr'),
+  loginBtn: $('#loginBtn'),
+  adminPanel: $('#adminPanel'),
+  saveBar: $('#saveBar'),
+  saveBtn: $('#saveBtn'),
+  resetBtn: $('#resetBtn'),
+  reloadBtn: $('#reloadBtn'),
+  saveStatus: $('#saveStatus'),
+  categoriesList: $('#categoriesList'),
+  templatesList: $('#templatesList'),
+  toast: $('#toast'),
+};
+
+let currentConfig = null;
+let dirty = false;
+let saving = false;
+
+/* =========================================================
+   Boot
+   ========================================================= */
+document.addEventListener('DOMContentLoaded', async () => {
+  bindTabs();
+  bindLogin();
+  bindSaveBar();
+
+  if (hasValidSession()) {
+    await enterPanel();
+  } else {
+    els.loginScreen.hidden = false;
+    setTimeout(() => els.adminPass.focus(), 60);
+  }
+});
+
+/* =========================================================
+   Login
+   ========================================================= */
+function bindLogin() {
+  els.loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    els.loginErr.hidden = true;
+    const pass = els.adminPass.value;
+    if (!pass) return showLoginErr('পাসওয়ার্ড লেখো।');
+
+    els.loginBtn.disabled = true;
+    const origText = els.loginBtn.innerHTML;
+    els.loginBtn.innerHTML = '⏳ যাচাই করা হচ্ছে…';
+
+    try {
+      // First-time setup: no password stored yet, so create one
+      const ref = doc(db, 'site_config', 'admin');
+      const snap = await getDoc(ref);
+
+      const hash = await sha256Hex(pass);
+
+      if (!snap.exists()) {
+        await setDoc(ref, { passwordHash: hash, createdAt: serverTimestamp() });
+        saveSession();
+        await enterPanel();
+        showToast('প্রথমবার সেটআপ সম্পন্ন! পাসওয়ার্ড সেভ হয়েছে।');
+        return;
+      }
+
+      const stored = snap.data().passwordHash;
+      if (hash !== stored) {
+        els.adminPass.value = '';
+        showLoginErr('পাসওয়ার্ড মিলছে না।');
+        return;
+      }
+
+      saveSession();
+      await enterPanel();
+    } catch (err) {
+      console.error('[admin] login failed', err);
+      showLoginErr('লগইন করা যায়নি। ইন্টারনেট চেক কর।');
+    } finally {
+      els.loginBtn.disabled = false;
+      els.loginBtn.innerHTML = origText;
+    }
+  });
+}
+
+function showLoginErr(msg) {
+  els.loginErr.textContent = msg;
+  els.loginErr.hidden = false;
+}
+
+/* =========================================================
+   Enter panel
+   ========================================================= */
+async function enterPanel() {
+  els.loginScreen.hidden = true;
+  els.adminPanel.hidden = false;
+  els.saveBar.hidden = false;
+
+  currentConfig = await loadSiteConfig();
+
+  // Fill all inputs from config
+  $$('[data-cfg]').forEach((el) => {
+    const key = el.dataset.cfg;
+    const val = currentConfig[key];
+    if (el.tagName === 'SELECT') el.value = val || 'bn';
+    else el.value = val ?? '';
+    el.addEventListener('input', markDirty);
+    el.addEventListener('change', markDirty);
+  });
+
+  renderCategories();
+  renderTemplates();
+  setSaveStatus('clean');
+}
+
+/* =========================================================
+   Tabs
+   ========================================================= */
+function bindTabs() {
+  $$('.admin-tab').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      $$('.admin-tab').forEach((b) => b.classList.toggle('is-active', b === btn));
+      $$('.panel').forEach((p) => p.classList.toggle('is-active', p.dataset.panel === tab));
+    });
+  });
+}
+
+/* =========================================================
+   Categories render
+   ========================================================= */
+function renderCategories() {
+  const cats = currentConfig.categories || {};
+  const keys = Object.keys(DEFAULT_CONFIG.categories);
+
+  els.categoriesList.innerHTML = keys.map((key) => {
+    const cat = cats[key] || DEFAULT_CONFIG.categories[key];
+    return `
+      <div class="cat-card" data-cat-key="${key}">
+        <div class="cat-card__head">
+          <div class="cat-card__preview" data-preview="cat-${key}">
+            ${cat.image ? `<img src="${escapeAttr(cat.image)}" alt="" data-emoji="${escapeAttr(cat.emoji || '❓')}" />` : `<span>${escapeAttr(cat.emoji || '❓')}</span>`}
+          </div>
+          <div style="flex:1;min-width:0">
+            <h3 class="cat-card__title">${escapeHtml(cat.label_bn || key)}</h3>
+            <span class="cat-card__key">${key}</span>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label class="field__label">নাম (বাংলা)</label>
+            <input class="input" data-cat="${key}.label_bn" value="${escapeAttr(cat.label_bn || '')}" />
+          </div>
+          <div class="field">
+            <label class="field__label">Name (English)</label>
+            <input class="input" data-cat="${key}.label_en" value="${escapeAttr(cat.label_en || '')}" />
+          </div>
+          <div class="field">
+            <label class="field__label">ছবির path</label>
+            <input class="input" data-cat="${key}.image" value="${escapeAttr(cat.image || '')}" placeholder="images/food-biryani.png" />
+          </div>
+          <div class="field">
+            <label class="field__label">ইমোজি (ছবি না থাকলে)</label>
+            <input class="input" data-cat="${key}.emoji" value="${escapeAttr(cat.emoji || '')}" maxlength="4" />
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Bind change events
+  els.categoriesList.querySelectorAll('[data-cat]').forEach((input) => {
+    input.addEventListener('input', () => {
+      const [key, field] = input.dataset.cat.split('.');
+      if (!currentConfig.categories) currentConfig.categories = {};
+      if (!currentConfig.categories[key]) currentConfig.categories[key] = { ...DEFAULT_CONFIG.categories[key] };
+      currentConfig.categories[key][field] = input.value;
+      // Update preview live
+      const preview = els.categoriesList.querySelector(`[data-preview="cat-${key}"]`);
+      if (preview) {
+        const cat = currentConfig.categories[key];
+        if (field === 'image' && cat.image) preview.innerHTML = `<img src="${escapeAttr(cat.image)}" alt="" />`;
+        else if (field === 'emoji' && !cat.image) preview.innerHTML = `<span>${escapeAttr(cat.emoji || '❓')}</span>`;
+      }
+      markDirty();
+    });
+  });
+
+  initImgFallbacks(els.categoriesList);
+}
+
+/* =========================================================
+   Templates render
+   ========================================================= */
+function renderTemplates() {
+  const tmpls = currentConfig.templates || {};
+  const keys = Object.keys(DEFAULT_CONFIG.templates);
+
+  els.templatesList.innerHTML = keys.map((key) => {
+    const t = tmpls[key] || DEFAULT_CONFIG.templates[key];
+    const opts = t.options || DEFAULT_CONFIG.templates[key].options;
+
+    return `
+      <div class="cat-card" data-tmpl-key="${key}">
+        <div class="cat-card__head">
+          <div class="cat-card__preview" data-preview="tmpl-${key}">
+            ${t.image ? `<img src="${escapeAttr(t.image)}" alt="" data-emoji="${escapeAttr(t.emoji || '❓')}" />` : `<span>${escapeAttr(t.emoji || '❓')}</span>`}
+          </div>
+          <div style="flex:1;min-width:0">
+            <h3 class="cat-card__title">${escapeHtml(t.q_bn || key)}</h3>
+            <span class="cat-card__key">${key}</span>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label class="field__label">প্রশ্ন (বাংলা) — {name} ব্যবহার করো</label>
+            <input class="input" data-tmpl="${key}.q_bn" value="${escapeAttr(t.q_bn || '')}" />
+          </div>
+          <div class="field">
+            <label class="field__label">Question (English)</label>
+            <input class="input" data-tmpl="${key}.q_en" value="${escapeAttr(t.q_en || '')}" />
+          </div>
+          <div class="field">
+            <label class="field__label">ছবির path</label>
+            <input class="input" data-tmpl="${key}.image" value="${escapeAttr(t.image || '')}" />
+          </div>
+          <div class="field">
+            <label class="field__label">ইমোজি</label>
+            <input class="input" data-tmpl="${key}.emoji" value="${escapeAttr(t.emoji || '')}" maxlength="4" />
+          </div>
+        </div>
+
+        <h4 style="margin-top:16px;font-size:.94rem;color:var(--ink-700)">অপশনগুলো (৪টা)</h4>
+        <div class="tmpl-options">
+          ${opts.map((o, i) => `
+            <div class="tmpl-option">
+              <div class="tmpl-option__preview" data-preview="opt-${key}-${i}">
+                ${o.image ? `<img src="${escapeAttr(o.image)}" alt="" />` : `<span>${escapeAttr(o.emoji || '·')}</span>`}
+              </div>
+              <input class="input" data-opt="${key}.${i}.text_bn" value="${escapeAttr(o.text_bn || '')}" placeholder="বাংলা" />
+              <input class="input" data-opt="${key}.${i}.text_en" value="${escapeAttr(o.text_en || '')}" placeholder="English" />
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="grid-2" style="margin-top:12px">
+          ${opts.map((o, i) => `
+            <div class="field">
+              <label class="field__label">অপশন ${i+1} — ছবির path</label>
+              <input class="input" data-opt="${key}.${i}.image" value="${escapeAttr(o.image || '')}" />
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Bind template text inputs
+  els.templatesList.querySelectorAll('[data-tmpl]').forEach((input) => {
+    input.addEventListener('input', () => {
+      const [key, field] = input.dataset.tmpl.split('.');
+      if (!currentConfig.templates) currentConfig.templates = {};
+      if (!currentConfig.templates[key]) currentConfig.templates[key] = structuredClone(DEFAULT_CONFIG.templates[key]);
+      currentConfig.templates[key][field] = input.value;
+      markDirty();
+    });
+  });
+
+  // Bind option inputs
+  els.templatesList.querySelectorAll('[data-opt]').forEach((input) => {
+    input.addEventListener('input', () => {
+      const [key, idx, field] = input.dataset.opt.split('.');
+      if (!currentConfig.templates) currentConfig.templates = {};
+      if (!currentConfig.templates[key]) currentConfig.templates[key] = structuredClone(DEFAULT_CONFIG.templates[key]);
+      if (!currentConfig.templates[key].options) currentConfig.templates[key].options = structuredClone(DEFAULT_CONFIG.templates[key].options);
+      currentConfig.templates[key].options[Number(idx)][field] = input.value;
+
+      // Update preview when image changes
+      if (field === 'image') {
+        const preview = els.templatesList.querySelector(`[data-preview="opt-${key}-${idx}"]`);
+        if (preview) preview.innerHTML = input.value
+          ? `<img src="${escapeAttr(input.value)}" alt="" />`
+          : `<span>·</span>`;
+      }
+      markDirty();
+    });
+  });
+
+  initImgFallbacks(els.templatesList);
+}
+
+/* =========================================================
+   Save / reset / reload
+   ========================================================= */
+function bindSaveBar() {
+  els.saveBtn.addEventListener('click', onSave);
+  els.resetBtn.addEventListener('click', onReset);
+  els.reloadBtn.addEventListener('click', onReload);
+
+  window.addEventListener('beforeunload', (e) => {
+    if (dirty && !saving) { e.preventDefault(); e.returnValue = ''; }
+  });
+}
+
+async function onSave() {
+  if (saving) return;
+  saving = true;
+  els.saveBtn.disabled = true;
+  setSaveStatus('saving');
+
+  try {
+    // Collect all data-cfg inputs
+    const payload = {};
+    $$('[data-cfg]').forEach((el) => {
+      const key = el.dataset.cfg;
+      payload[key] = el.tagName === 'SELECT' ? el.value : el.value.trim();
+    });
+
+    // categories and templates are already on currentConfig, include them
+    payload.categories = currentConfig.categories;
+    payload.templates = currentConfig.templates;
+
+    await saveSiteConfig(payload);
+    setSaveStatus('saved');
+    showToast('✓ সেভ হয়েছে!');
+    dirty = false;
+  } catch (err) {
+    console.error('[admin] save failed', err);
+    setSaveStatus('error');
+    showToast('সেভ করা যায়নি। আবার চেষ্টা কর।');
+  } finally {
+    saving = false;
+    els.saveBtn.disabled = false;
+  }
+}
+
+function onReset() {
+  if (!confirm('সব পরিবর্তন মুছে ডিফল্টে ফিরে যাবে। নিশ্চিত?')) return;
+  currentConfig = structuredClone(DEFAULT_CONFIG);
+  $$('[data-cfg]').forEach((el) => {
+    const val = currentConfig[el.dataset.cfg];
+    if (el.tagName === 'SELECT') el.value = val || 'bn';
+    else el.value = val ?? '';
+  });
+  renderCategories();
+  renderTemplates();
+  markDirty();
+  showToast('ডিফল্টে রিসেট হয়েছে (এখনো সেভ হয়নি)');
+}
+
+async function onReload() {
+  if (dirty && !confirm('সেভ না করা পরিবর্তন হারিয়ে যাবে। লোড করবে?')) return;
+  currentConfig = null;
+  const { clearSiteConfigCache } = await import('./site-config.js');
+  clearSiteConfigCache();
+  currentConfig = await loadSiteConfig();
+  $$('[data-cfg]').forEach((el) => {
+    const val = currentConfig[el.dataset.cfg];
+    if (el.tagName === 'SELECT') el.value = val || 'bn';
+    else el.value = val ?? '';
+  });
+  renderCategories();
+  renderTemplates();
+  setSaveStatus('clean');
+  dirty = false;
+  showToast('রিলোড হয়েছে');
+}
+
+/* =========================================================
+   Status
+   ========================================================= */
+function markDirty() {
+  dirty = true;
+  setSaveStatus('dirty');
+}
+function setSaveStatus(state) {
+  const el = els.saveStatus;
+  el.className = 'save-bar__status';
+  if (state === 'clean') el.textContent = 'পরিবর্তন হয়নি';
+  else if (state === 'dirty') { el.textContent = '⚠️ সেভ করা হয়নি'; el.classList.add('is-dirty'); }
+  else if (state === 'saving') { el.textContent = '⏳ সেভ হচ্ছে…'; }
+  else if (state === 'saved') { el.textContent = '✓ সেভ হয়েছে'; el.classList.add('is-ok'); }
+  else if (state === 'error') { el.textContent = '✕ সেভ ব্যর্থ'; el.classList.add('is-error'); }
+}
+
+/* =========================================================
+   Toast + helpers
+   ========================================================= */
+let toastTimer = null;
+function showToast(msg) {
+  els.toast.textContent = msg;
+  els.toast.hidden = false;
+  requestAnimationFrame(() => els.toast.classList.add('is-show'));
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    els.toast.classList.remove('is-show');
+    setTimeout(() => { els.toast.hidden = true; }, 260);
+  }, 2400);
+}
+function escapeHtml(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+function initImgFallbacks(root) {
+  root.querySelectorAll('img[data-emoji]').forEach((img) => {
+    if (img.dataset.fallbackBound === '1') return;
+    img.dataset.fallbackBound = '1';
+    img.addEventListener('error', () => {
+      const emoji = img.dataset.emoji || '🖼️';
+      const span = document.createElement('span');
+      span.textContent = emoji;
+      span.style.fontSize = '1.4rem';
+      img.replaceWith(span);
+    }, { once: true });
+  });
+}
+</script>
+</body>
+</html>
